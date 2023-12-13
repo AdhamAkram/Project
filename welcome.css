@@ -1,0 +1,23 @@
+.btn  :hover{
+
+color: rgba(147, 138, 84, 0.278);
+    
+}
+
+
+.nav{
+    float: right;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  
+}
+.taz{
+    color:rgb(194, 203, 235);
+    font-size: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-right: 9px;
+    float: left;
+  padding-bottom: 10px;
+    font-weight: bold;
+}
