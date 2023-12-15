@@ -585,7 +585,7 @@ button:not(:disabled) {
     cursor: pointer;
 } 
 
-.button.button-green { 
+.button.button-black { 
     background-color: #252525;
 } 
 
@@ -778,4 +778,28 @@ img {
   width: 80%;
       margin: 0 auto;
       margin-top: 2%;
+}
+.d-inline-block .rounded-circle{
+  width: 85px; height: 100px;
+  
+}
+
+.mt-3{
+  font-weight: bold;
+}
+.mt-3 .leftside{
+  margin-right: 30px;
+}
+#staticBackdropLabel{
+  font-weight: bolder;
+
+}
+.modal-title {
+  display: block;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.modal-footer .button-black{
+  margin:  10px;
 }
