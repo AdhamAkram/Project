@@ -116,13 +116,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       
        $userDetails = $result->fetch_assoc();
 
-      // // Start a session
+      
        
   
       // // Store user details in the session
        $_SESSION['user_id'] = $userDetails['user_id'];
        $_SESSION['username'] = $userDetails['username'];
-       $_SESSION['adham'] ='adham';
+       
       echo '<script>window.location.href = "homepage.php";</script>';
       exit();
   } else {
