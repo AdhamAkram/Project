@@ -1,3 +1,18 @@
+<?php
+$servername = "localhost:3307";
+$username = "root";
+$password = "";
+$dbname = "project";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+?>
+
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
   <head><script src="../assets/js/color-modes.js"></script>
@@ -105,22 +120,61 @@
           <span class="text-black">Your cart</span>
          
         </h4>
+        <?php
+        $matchId = isset($_POST['match_id']) ? $_POST['match_id'] : '';
+        $categoryName = isset($_POST['category_name']) ? $_POST['category_name'] : '';
+        $price = isset($_POST['price']) ? $_POST['price'] : '';
+        $sql = "
+        SELECT
+        m.match_id,
+            t.tournament_name,
+            team1.team_name AS team1_name,
+            team2.team_name AS team2_name
+        FROM
+            matches m
+        JOIN
+            team team1 ON m.team1_id = team1.team_id
+        JOIN
+            team team2 ON m.team2_id = team2.team_id
+            JOIN
+            tournament t ON m.tournament_id = t.tournament_id
+        JOIN
+            stadium s ON m.stadium_id = s.stadium_id
+            WHERE
+            m.match_id LIKE '%$matchId%'
+            
+        ";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+          echo '
         <ul class="list-group mb-3">
           <li class="list-group-item d-flex justify-content-between lh-sm">
             <div>
-              <h6 class="my-0">Product name</h6>
-              <small class="text-body-secondary">Brief description</small>
+              <h6 class="my-0">' . $row["team1_name"] . ' vs ' . $row["team2_name"] . '</h6>
+              <small class="text-body-secondary">'. $row["tournament_name"] .'</small>
             </div>
-            <span class="text-body-secondary">$12</span>
           </li>
          
         
           <li class="list-group-item d-flex justify-content-between">
-            <span>Total (USD)</span>
-            <strong>$20</strong>
+            <span>Total (EGP)</span>
+            <strong>'.$price.'</strong>
           </li>
         </ul>
-
+        ';
+      }
+    } else {
+        echo "No matches found.";
+    }
+    
+    
+    
+    
+    
+    $conn->close();
+    
+        ?>
        
       </div>
       <div class="col-md-7 col-lg-8">
@@ -189,6 +243,9 @@
       </div>
     </div>
   </main>
+  
+
+
 
   
 </div>

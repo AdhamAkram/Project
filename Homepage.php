@@ -1,3 +1,31 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+ if (isset($_SESSION['user_id'])) {
+//   // Access user details
+  $userId = $_SESSION['user_id'];
+   $username = $_SESSION['username'];
+//   // Access other relevant details
+ } else {
+//   // Redirect to the login page if not logged in
+   echo '<script>window.location.href = "signin-form.php";</script>';
+   exit();
+ }
+$servername = "localhost:3307";
+$username = "root";
+$password = "";
+$dbname = "project";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,7 +79,7 @@
         class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
       >
         <li>
-          <a href="#" class="nav-link text-white">
+          <a href="Homepage.php" class="nav-link text-white">
             <svg class="bi d-block mx-auto mb-1 color-black" width="24" height="24" >
               <use xlink:href="#home" />
             </svg>
@@ -79,6 +107,11 @@
     </div>
   </div>
 </div>
+<?php
+
+
+
+?>
 <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,20 +121,20 @@
     <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
       <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
       <div class="info">
-          <div class="welcome">Welcome</div>
-          <div class="name">أدهم سامي</div>
-          <div class="fan-id">
-              <span class="text-grey-light">Tazkarti ID</span>
-              <span class="id-num">102011900989962</span>
-          </div>
-          <div class="fan-id vaccin-info"></div>
-      </div>
+                <div class="welcome">Welcome</div>
+                <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
+                <div class="fan-id">
+                    <span class="text-grey-light">ID:</span>
+                    <span class="id-num"><?php echo '' .$_SESSION['user_id'].'';  ?></span>
+                </div>
+                <div class="fan-id vaccin-info"><!----></div>
+            </div>
       <ul class="navbar-nav col-lg-6 justify-content-lg-center">
           <ul
           class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
         >
           <li class="nav-icon">
-            <a href="#" class="nav-link text-black">
+            <a href="matches-page.php" class="nav-link text-black">
               <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                   <use xlink:href="#football" />
                 </svg>                    Matches
@@ -116,7 +149,7 @@
               </a>
             </li>
             <li class="nav-icon">
-                <a href="#" class="nav-link text-black">
+                <a href="mytickets.php" class="nav-link text-black">
                   <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                       <use xlink:href="#ticket" />
                     </svg>
@@ -201,298 +234,162 @@
             <span class="fs-4"><strong>Matches</strong></span>
           </a>
           <ul class="nav nav-pills">
-            <li class="homebutton" type="button"><a href="#" class="nav-link">View All Matches</a></li>
+            <li class="homebutton" type="button"><a href="matches-page.php" class="nav-link">View All Matches</a></li>
           </ul>
         </header>
      </div>
-     <div class="all-matches snipcss-UkjXK">
-      <div class="ng-star-inserted">
-        <div class="match active">
-          <div class="top clearfix">
-            <div class="teams">
-              <div class="image-holder first">
-                <div class="flag-icon style-GZKDY" id="style-GZKDY">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Al_Ahly_logo_2.png/800px-Al_Ahly_logo_2.png" class="rounded-circle" alt="Cinque Terre">  
-               </div>
-              </div>
-              <div class="image-holder second">
-                <div class="flag-icon style-jQWQz" id="style-jQWQz">
-                  <img src="https://upload.wikimedia.org/wikipedia/en/2/22/ENPPI_Club_Logo.png" class="rounded" alt="ENPPI_Club_Logo">  
+     <?php
 
-                </div>
-              </div>
-              <div class="team-names">
-                <div class="team-name first">
-                  Al Ahly SC 
-                </div>
-                <div class="team-name-holder">
-                  <div class="vs">
-                    vs
-                  </div>
-                  <div class="team-name second">
-                    Enppi SC 
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="blocks">
-              <div class="one-block stadium">
-                <div class="image-holder">
-                  <img alt="" src="https://tazkarti.com/assets/images/svg/stadium.svg">
-                </div>
-                <div class="info">
-                  <h6>Cairo International Stadium</h6>
-                </div>
-              </div>
-              <div class="one-block when">
-                <div class="image-holder">
-                  <img alt="" src="https://tazkarti.com/assets/images/calendar.svg">
-                </div>
-                <div class="info">
-                  <div class="first">
-                    Fri 15 Dec 2023
-                  </div>
-                  <div class="second">
-                    Time : 06 : 00 PM 
-                  </div>
-                </div>
-              </div>
-              <button class="button button-green width-auto">
-                Book Ticket 
-              </button>
-            </div>
-          </div>
-          <div class="bottom">
-            <div class="one">
-              <div class="first">
-                Tournament
-              </div>
-              <div class="second style-oF12b" id="style-oF12b">
-                EPL 2023/2024
-              </div>
-            </div>
-            <div class="one">
-              <div class="first">
-                Match No.
-              </div>
-              <div class="second style-qTcj7" id="style-qTcj7">
-                74
-              </div>
-            </div>
-            <div class="one">
-              <div class="first ng-star-inserted">
-                Group : 
-              </div>
-              <div class="second style-tabpl" id="style-tabpl">
-                Week Nine 
-              </div>
-            </div>
-            <div class="one">
-              <div class="second style-h4N5j" id="style-h4N5j">
-                First Stage 
-              </div>
-            </div>
-            <div class="status green">
-              Available 
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="all-matches snipcss-UkjXK">
-      <div class="ng-star-inserted">
-        <div class="match active">
-          <div class="top clearfix">
-            <div class="teams">
-              <div class="image-holder first">
-                <div class="flag-icon style-GZKDY" id="style-GZKDY">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Al_Ahly_logo_2.png/800px-Al_Ahly_logo_2.png" class="rounded-circle" alt="Cinque Terre">  
-               </div>
-              </div>
-              <div class="image-holder second">
-                <div class="flag-icon style-jQWQz" id="style-jQWQz">
-                  <img src="https://upload.wikimedia.org/wikipedia/en/2/22/ENPPI_Club_Logo.png" class="rounded" alt="ENPPI_Club_Logo">  
-
-                </div>
-              </div>
-              <div class="team-names">
-                <div class="team-name first">
-                  Al Ahly SC 
-                </div>
-                <div class="team-name-holder">
-                  <div class="vs">
-                    vs
-                  </div>
-                  <div class="team-name second">
-                    Enppi SC 
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="blocks">
-              <div class="one-block stadium">
-                <div class="image-holder">
-                  <img alt="" src="https://tazkarti.com/assets/images/svg/stadium.svg">
-                </div>
-                <div class="info">
-                  <h6>Cairo International Stadium</h6>
-                </div>
-              </div>
-              <div class="one-block when">
-                <div class="image-holder">
-                  <img alt="" src="https://tazkarti.com/assets/images/calendar.svg">
-                </div>
-                <div class="info">
-                  <div class="first">
-                    Fri 15 Dec 2023
-                  </div>
-                  <div class="second">
-                    Time : 06 : 00 PM 
-                  </div>
-                </div>
-              </div>
-              <button class="button button-green width-auto">
-                Book Ticket 
-              </button>
-            </div>
-          </div>
-          <div class="bottom">
-            <div class="one">
-              <div class="first">
-                Tournament
-              </div>
-              <div class="second style-oF12b" id="style-oF12b">
-                EPL 2023/2024
-              </div>
-            </div>
-            <div class="one">
-              <div class="first">
-                Match No.
-              </div>
-              <div class="second style-qTcj7" id="style-qTcj7">
-                74
-              </div>
-            </div>
-            <div class="one">
-              <div class="first ng-star-inserted">
-                Group : 
-              </div>
-              <div class="second style-tabpl" id="style-tabpl">
-                Week Nine 
-              </div>
-            </div>
-            <div class="one">
-              <div class="second style-h4N5j" id="style-h4N5j">
-                First Stage 
-              </div>
-            </div>
-            <div class="status green">
-              Available 
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="all-matches snipcss-UkjXK">
-      <div class="ng-star-inserted">
-        <div class="match active">
-          <div class="top clearfix">
-            <div class="teams">
-              <div class="image-holder first">
-                <div class="flag-icon style-GZKDY" id="style-GZKDY">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Al_Ahly_logo_2.png/800px-Al_Ahly_logo_2.png" class="rounded-circle" alt="Cinque Terre">  
-               </div>
-              </div>
-              <div class="image-holder second">
-                <div class="flag-icon style-jQWQz" id="style-jQWQz">
-                  <img src="https://upload.wikimedia.org/wikipedia/en/2/22/ENPPI_Club_Logo.png" class="rounded" alt="ENPPI_Club_Logo">  
-
-                </div>
-              </div>
-              <div class="team-names">
-                <div class="team-name first">
-                  Al Ahly SC 
-                </div>
-                <div class="team-name-holder">
-                  <div class="vs">
-                    vs
-                  </div>
-                  <div class="team-name second">
-                    Enppi SC 
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="blocks">
-              <div class="one-block stadium">
-                <div class="image-holder">
-                  <img alt="" src="https://tazkarti.com/assets/images/svg/stadium.svg">
-                </div>
-                <div class="info">
-                  <h6>Cairo International Stadium</h6>
-                </div>
-              </div>
-              <div class="one-block when">
-                <div class="image-holder">
-                  <img alt="" src="https://tazkarti.com/assets/images/calendar.svg">
-                </div>
-                <div class="info">
-                  <div class="first">
-                    Fri 15 Dec 2023
-                  </div>
-                  <div class="second">
-                    Time : 06 : 00 PM 
-                  </div>
-                </div>
-              </div>
-              <button class="button button-green width-auto">
-                Book Ticket 
-              </button>
-            </div>
-          </div>
-          <div class="bottom">
-            <div class="one">
-              <div class="first">
-                Tournament
-              </div>
-              <div class="second style-oF12b" id="style-oF12b">
-                EPL 2023/2024
-              </div>
-            </div>
-            <div class="one">
-              <div class="first">
-                Match No.
-              </div>
-              <div class="second style-qTcj7" id="style-qTcj7">
-                74
-              </div>
-            </div>
-            <div class="one">
-              <div class="first ng-star-inserted">
-                Group : 
-              </div>
-              <div class="second style-tabpl" id="style-tabpl">
-                Week Nine 
-              </div>
-            </div>
-            <div class="one">
-              <div class="second style-h4N5j" id="style-h4N5j">
-                First Stage 
-              </div>
-            </div>
-            <div class="status green">
-              Available 
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-   
-
+     $sql = "
+     SELECT
+     m.match_id,
+     m.match_date,
+     m.match_time,
+     t.tournament_name,
+     s.stadium_name,
+     m.week,
+     m.stage,
+     m.available,
+     team1.team_name AS team1_name,
+     team1.team_logo_url AS team1_logo_url,
+     team2.team_name AS team2_name,
+     team2.team_logo_url AS team2_logo_url
+ FROM 
+     matches m
+ JOIN
+     team team1 ON m.team1_id = team1.team_id
+ JOIN
+     team team2 ON m.team2_id = team2.team_id
+     JOIN
+     tournament t ON m.tournament_id = t.tournament_id
+ JOIN
+     stadium s ON m.stadium_id = s.stadium_id
     
-
+         ORDER BY
+         m.match_date ASC
+         LIMIT 3;
+     ";
+     $result = $conn->query($sql);
+     
+     if ($result->num_rows > 0) {
+     
+         
+       while ($row = $result->fetch_assoc()) {
+           echo '
+               <div class="all-matches snipcss-UkjXK">
+                   <div class="ng-star-inserted">
+                       <div class="match active">
+                           <div class="top clearfix">
+                               <div class="teams">
+                                   <div class="image-holder first">
+                                       <div class="flag-icon style-GZKDY" id="style-GZKDY">
+                                           <img src="' . $row["team1_logo_url"] . '" class="rounded-circle" alt="Team 1 Logo">  
+                                       </div>
+                                   </div>
+                                   <div class="image-holder second">
+                                       <div class="flag-icon style-jQWQz" id="style-jQWQz">
+                                           <img src="' . $row["team2_logo_url"] . '" class="rounded" alt="Team 2 Logo">  
+                                       </div>
+                                   </div>
+                                   <div class="team-names">
+                                       <div class="team-name first">
+                                           ' . $row["team1_name"] . '
+                                       </div>
+                                       <div class="team-name-holder">
+                                           <div class="vs">
+                                               vs
+                                           </div>
+                                           <div class="team-name second">
+                                               ' . $row["team2_name"] . '
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="blocks">
+                                   <div class="one-block stadium">
+                                       <div class="image-holder">
+                                           <img alt="" src="https://tazkarti.com/assets/images/svg/stadium.svg">
+                                       </div>
+                                       <div class="info">
+                                           <h6>' . $row["stadium_name"] . '</h6>
+                                       </div>
+                                   </div>
+                                   <div class="one-block when">
+                                       <div class="image-holder">
+                                           <img alt="" src="https://tazkarti.com/assets/images/calendar.svg">
+                                       </div>
+                                       <div class="info">
+                                           <div class="first">
+                                               ' . date("D j M Y", strtotime($row["match_date"])) . '
+                                           </div>
+                                           <div class="second">
+                                               Time: ' . $row["match_time"] . ' PM 
+                                           </div>
+                                       </div>
+                                   </div>
+                                  
+                                   <button class="button button-black width-auto book-ticket-btn" 
+                                   data-bs-toggle="modal" 
+                                   data-bs-target="#staticBackdrop"
+                                   data-match-id="' . $row["match_id"] . '"
+                                   data-team1-name="' . $row["team1_name"] . '"
+                                   data-team1-logo="' . $row["team1_logo_url"] . '"
+                                   data-team2-name="' . $row["team2_name"] . '"
+                                   data-team2-logo="' . $row["team2_logo_url"] . '"
+                                  
+                                   onclick="bookTicket(this)">
+                                   Book Ticket
+                               </button>
+                 </div>
+               </div>
+               <div class="bottom">
+                 <div class="one">
+                   <div class="first">
+                     Tournament
+                   </div>
+                   <div class="second style-oF12b" id="style-oF12b">
+                   '. $row["tournament_name"] .'
+                   </div>
+                 </div>
+                 <div class="one">
+                   <div class="first">
+                     Match No.
+                   </div>
+                   <div class="second style-qTcj7" id="style-qTcj7">
+                   '. $row["match_id"] .'
+                   </div>
+                 </div>
+                 <div class="one">
+                   <div class="first ng-star-inserted">
+                     Group : 
+                   </div>
+                   <div class="second style-tabpl" id="style-tabpl">
+                   '. $row["week"] .' 
+                   </div>
+                 </div>
+                 <div class="one">
+                   <div class="second style-h4N5j" id="style-h4N5j">
+                   '. $row["stage"] .'
+                   </div>
+                 </div>
+                 
+               </div>
+             </div>
+           </div>
+         </div> <hr>';
+        }
+      } else {
+        echo "No matches found.";
+      }
+      
+      
+      $conn->close();
+      
+     
+     
+     
+     
+     ?>
  
     <div class="px-3 py-2 text-bg-dark border-bottom">
       <div class="container">

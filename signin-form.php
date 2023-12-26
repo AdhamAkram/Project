@@ -1,3 +1,19 @@
+<?php
+session_start();
+$servername = "localhost:3307";
+$username = "root";
+$password = "";
+$dbname = "project";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -87,29 +103,59 @@
         </div>
       </div>
     </div>
+    <?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $email = $_POST["email"];
+  $password = $_POST["password"];
+
+  // SQL query to check user credentials
+  $sql = "SELECT * FROM users WHERE email = '$email' AND password_hash = '$password'";
+  $result = $conn->query($sql);
+
+  if ($result->num_rows > 0) {
+      
+       $userDetails = $result->fetch_assoc();
+
+      // // Start a session
+       
+  
+      // // Store user details in the session
+       $_SESSION['user_id'] = $userDetails['user_id'];
+       $_SESSION['username'] = $userDetails['username'];
+       $_SESSION['adham'] ='adham';
+      echo '<script>window.location.href = "homepage.php";</script>';
+      exit();
+  } else {
+      echo '<div class="alert alert-danger" role="alert">
+      <strong>Please check your password and Email and try again.</strong>
+    </div>';
+  }
+}
+
+$conn->close();
+
+?>
     <main class="d-flex h-100 align-items-center py-4 bg-body-tertiary">
     <main class="form-signin w-100 m-auto">
-      <form>
-        <img class="mb-4" src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-    
-        <div class="form-floating">
-          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">Email address</label>
-        </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-          <label for="floatingPassword">Password</label>
-        </div>
-    
-        <div class="form-check text-start my-3">
-          <label class = "form-check-label">
+    <form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+    <div class="form-floating">
+        <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
+        <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating">
+        <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+        <label for="floatingPassword">Password</label>
+    </div>
+
+    <div class="form-check text-start my-3">
+        <label class="form-check-label">
             Don't have an account?
-          </label>
-          <a href="#" class="">Sign Up</a>
-        </div>
-        <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
-      </form>
+        </label>
+        <a href="#" class="">Sign Up</a>
+    </div>
+    <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+</form>
+
     </main>
     <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js"></script>
     

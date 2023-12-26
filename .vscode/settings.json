@@ -1,3 +1,8 @@
 {
-    "liveServer.settings.port": 5501
+    "liveServer.settings.port": 5501,
+    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.startupEditor": "none",
+    "liveServer.settings.donotShowInfoMsg": true,
+    "git.ignoreMissingGitWarning": true,
+    "php.validate.executablePath": "D:/Programs/Xampp/php"
 }
