@@ -22,6 +22,19 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+$ticketSql = "SELECT category_name, price FROM ticket_pricing";
+$ticketResult = $conn->query($ticketSql);
+
+if (!$ticketResult) {
+    die("Error retrieving ticket categories: " . $conn->error);
+}
+
+// Store ticket categories and prices in an array
+$ticketCategories = array();
+while ($ticketRow = $ticketResult->fetch_assoc()) {
+    $ticketCategories[] = $ticketRow;
+}
+
 
 
 ?>
@@ -32,7 +45,9 @@ if ($conn->connect_error) {
 <title>Homepage</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/headers/">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+<link rel="stylesheet" href="matches-page.css" />
 <link rel="stylesheet" href="Homepage.css">
 </head>
 <body>
@@ -276,107 +291,163 @@ if ($conn->connect_error) {
          
        while ($row = $result->fetch_assoc()) {
            echo '
-               <div class="all-matches snipcss-UkjXK">
-                   <div class="ng-star-inserted">
-                       <div class="match active">
-                           <div class="top clearfix">
-                               <div class="teams">
-                                   <div class="image-holder first">
-                                       <div class="flag-icon style-GZKDY" id="style-GZKDY">
-                                           <img src="' . $row["team1_logo_url"] . '" class="rounded-circle" alt="Team 1 Logo">  
-                                       </div>
+           <div class="all-matches snipcss-UkjXK">
+           <div class="ng-star-inserted">
+               <div class="match active">
+                   <div class="top clearfix">
+                       <div class="teams">
+                           <div class="image-holder first">
+                               <div class="flag-icon style-GZKDY" id="style-GZKDY">
+                                   <img src="' . $row["team1_logo_url"] . '" class="rounded-circle" alt="Team 1 Logo">  
+                               </div>
+                           </div>
+                           <div class="image-holder second">
+                               <div class="flag-icon style-jQWQz" id="style-jQWQz">
+                                   <img src="' . $row["team2_logo_url"] . '" class="rounded" alt="Team 2 Logo">  
+                               </div>
+                           </div>
+                           <div class="team-names">
+                               <div class="team-name first">
+                                   ' . $row["team1_name"] . '
+                               </div>
+                               <div class="team-name-holder">
+                                   <div class="vs">
+                                       vs
                                    </div>
-                                   <div class="image-holder second">
-                                       <div class="flag-icon style-jQWQz" id="style-jQWQz">
-                                           <img src="' . $row["team2_logo_url"] . '" class="rounded" alt="Team 2 Logo">  
-                                       </div>
-                                   </div>
-                                   <div class="team-names">
-                                       <div class="team-name first">
-                                           ' . $row["team1_name"] . '
-                                       </div>
-                                       <div class="team-name-holder">
-                                           <div class="vs">
-                                               vs
-                                           </div>
-                                           <div class="team-name second">
-                                               ' . $row["team2_name"] . '
-                                           </div>
-                                       </div>
+                                   <div class="team-name second">
+                                       ' . $row["team2_name"] . '
                                    </div>
                                </div>
-                               <div class="blocks">
-                                   <div class="one-block stadium">
-                                       <div class="image-holder">
-                                           <img alt="" src="https://tazkarti.com/assets/images/svg/stadium.svg">
-                                       </div>
-                                       <div class="info">
-                                           <h6>' . $row["stadium_name"] . '</h6>
-                                       </div>
+                           </div>
+                       </div>
+                       <div class="blocks">
+                           <div class="one-block stadium">
+                               <div class="image-holder">
+                                   <img alt="" src="https://tazkarti.com/assets/images/svg/stadium.svg">
+                               </div>
+                               <div class="info">
+                                   <h6>' . $row["stadium_name"] . '</h6>
+                               </div>
+                           </div>
+                           <div class="one-block when">
+                               <div class="image-holder">
+                                   <img alt="" src="https://tazkarti.com/assets/images/calendar.svg">
+                               </div>
+                               <div class="info">
+                                   <div class="first">
+                                       ' . date("D j M Y", strtotime($row["match_date"])) . '
                                    </div>
-                                   <div class="one-block when">
-                                       <div class="image-holder">
-                                           <img alt="" src="https://tazkarti.com/assets/images/calendar.svg">
-                                       </div>
-                                       <div class="info">
-                                           <div class="first">
-                                               ' . date("D j M Y", strtotime($row["match_date"])) . '
-                                           </div>
-                                           <div class="second">
-                                               Time: ' . $row["match_time"] . ' PM 
-                                           </div>
-                                       </div>
+                                   <div class="second">
+                                       Time: ' . $row["match_time"] . ' PM 
                                    </div>
-                                  
-                                   <button class="button button-black width-auto book-ticket-btn" 
-                                   data-bs-toggle="modal" 
-                                   data-bs-target="#staticBackdrop"
-                                   data-match-id="' . $row["match_id"] . '"
-                                   data-team1-name="' . $row["team1_name"] . '"
-                                   data-team1-logo="' . $row["team1_logo_url"] . '"
-                                   data-team2-name="' . $row["team2_name"] . '"
-                                   data-team2-logo="' . $row["team2_logo_url"] . '"
-                                  
-                                   onclick="bookTicket(this)">
-                                   Book Ticket
-                               </button>
-                 </div>
-               </div>
-               <div class="bottom">
-                 <div class="one">
-                   <div class="first">
-                     Tournament
-                   </div>
-                   <div class="second style-oF12b" id="style-oF12b">
-                   '. $row["tournament_name"] .'
-                   </div>
-                 </div>
-                 <div class="one">
-                   <div class="first">
-                     Match No.
-                   </div>
-                   <div class="second style-qTcj7" id="style-qTcj7">
-                   '. $row["match_id"] .'
-                   </div>
-                 </div>
-                 <div class="one">
-                   <div class="first ng-star-inserted">
-                     Group : 
-                   </div>
-                   <div class="second style-tabpl" id="style-tabpl">
-                   '. $row["week"] .' 
-                   </div>
-                 </div>
-                 <div class="one">
-                   <div class="second style-h4N5j" id="style-h4N5j">
-                   '. $row["stage"] .'
-                   </div>
-                 </div>
-                 
-               </div>
-             </div>
+                               </div>
+                           </div>
+                          
+                           <button class="button button-black width-auto book-ticket-btn" 
+                           data-bs-toggle="modal" 
+                           data-bs-target="#staticBackdrop"
+                           data-match-id="' . $row["match_id"] . '"
+                           data-team1-name="' . $row["team1_name"] . '"
+                           data-team1-logo="' . $row["team1_logo_url"] . '"
+                           data-team2-name="' . $row["team2_name"] . '"
+                           data-team2-logo="' . $row["team2_logo_url"] . '"
+                          
+                           onclick="bookTicket(this)">
+                           Book Ticket
+                       </button>
+         </div>
+       </div>
+       <div class="bottom">
+         <div class="one">
+           <div class="first">
+             Tournament
            </div>
-         </div> <hr>';
+           <div class="second style-oF12b" id="style-oF12b">
+           '. $row["tournament_name"] .'
+           </div>
+         </div>
+         <div class="one">
+           <div class="first">
+             Match No.
+           </div>
+           <div class="second style-qTcj7" id="style-qTcj7">
+           '. $row["match_id"] .'
+           </div>
+         </div>
+         <div class="one">
+           <div class="first ng-star-inserted">
+             Group : 
+           </div>
+           <div class="second style-tabpl" id="style-tabpl">
+           '. $row["week"] .' 
+           </div>
+         </div>
+         <div class="one">
+           <div class="second style-h4N5j" id="style-h4N5j">
+           '. $row["stage"] .'
+           </div>
+         </div>
+         <div class="status green">
+         '. $row["available"] .'
+         </div>
+       </div>
+     </div>
+   </div>
+ </div> <hr>
+ <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+   <div class="modal-content">
+       <div class="modal-header">
+           <h4 class="modal-title" id="staticBackdropLabel">Book Ticket</h4>
+           <div><button type="button" class="btn-close" onClick="window.location.reload();" aria-label="Close"></button></div>
+       </div>
+       <div class="modal-body text-center">
+       
+               <input type="hidden" name="matchId" id="matchIdInput">
+               <input type="hidden" name="ticketCategory" id="ticketCategoryInput">
+               <input type="hidden" name="ticketPrice" id="ticketPriceInput">
+           <div class="teams-images modal-body text-center d-flex justify-content-center align-items-center">
+               <div class="d-inline-block mx-4 image-holder">
+               <img src="" class="rounded-circle img-fluid team-logo-1" alt="Team 1 Logo">
+                   <div class="team-name first team-name-1"></div>
+               </div>
+               <div class="d-inline-block mx-5 image-holder">
+               <img src="" class="rounded-circle img-fluid team-logo-2" alt="Team 2 Logo">
+                   <div class="team-name first team-name-2"></div>
+               </div>
+           </div>
+          
+       <div class="mt-3">
+           <div>Choose a seat</div>
+           <select id="cat-select" class="cat-select">
+              ';
+
+                 foreach ($ticketCategories as $category) {
+                     echo '<option value="' . $category['category_name'] . '|' . $category['price'] .'|' . $adham . '">' . $category['category_name'] . ' - ' . $category['price'] . 'EGP</option>';
+                 }
+                 $selectedOption = $_POST['cat-select'];
+             
+       
+               echo '
+               </select>
+               
+           </div>
+       </div>
+       <div class="modal-footer">
+         <button type="button"  class="btn btn-secondary" onClick="window.location.reload();" >Close</button>
+         <button type="submit" class="button button-black width-auto book-ticket-btn" 
+data-bs-toggle="modal" 
+data-bs-target="#staticBackdrop"
+id="bookButton"
+
+">
+Book Ticket
+</button>
+</form>
+       </div>
+   </div>
+</div>
+</div>';
         }
       } else {
         echo "No matches found.";
@@ -405,5 +476,97 @@ if ($conn->connect_error) {
       </div>
     </div>
   <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js"></script>
+     <script>
+        var matchId;
+function bookTicket(button) {
+    var modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+console.log("first")
+    // Get data attributes from the clicked button
+     matchId = button.getAttribute('data-match-id');
+    var team1Name = button.getAttribute('data-team1-name');
+    var team1Logo = button.getAttribute('data-team1-logo');
+    var team2Name = button.getAttribute('data-team2-name');
+    var team2Logo = button.getAttribute('data-team2-logo');
+    // Update modal content with the selected match data
+    document.querySelector('.team-name-1').innerText = team1Name;
+    document.querySelector('.team-name-2').innerText = team2Name;
+    document.querySelector('.team-logo-1').src = team1Logo;
+    document.querySelector('.team-logo-2').src = team2Logo;
+  
+
+    // Open the modal
+
+    modal.show();
+   
+  
+}
+
+
+    $(document).ready(function () {
+        // Event listener for the book button
+        $('#bookButton').on('click', function () {
+            // Get the selected option value
+            var selectedCategory = $('#cat-select').val();
+           
+            // Log the selected value to the console
+         
+            var values = selectedCategory.split('|');
+
+// Extract the price and category name
+var price = values[1];
+var categoryName = values[0];
+
+// Log the selected values to the console
+console.log('Selected Category Name:', categoryName);
+console.log('Selected Price:', price);
+
+console.log(matchId);
+proceedToCheckout();
+       
+
+});
+    });
+
+    function proceedToCheckout() {
+    // Get the selected category from your modal
+    var selectedCategory = $('#cat-select').val();
+    var values = selectedCategory.split('|');
+    var price = values[1];
+    var categoryName = values[0];
+
+    // Create a form element
+    var form = document.createElement('form');
+    form.method = 'post'; // You can change this to 'get' if needed
+    form.action = 'checkout-page.php';
+
+    // Create hidden input fields for the data you want to pass
+    var matchIdInput = document.createElement('input');
+    matchIdInput.type = 'hidden';
+    matchIdInput.name = 'match_id';
+    matchIdInput.value = matchId; // Use the global variable here
+
+    var categoryNameInput = document.createElement('input');
+    categoryNameInput.type = 'hidden';
+    categoryNameInput.name = 'category_name';
+    categoryNameInput.value = categoryName;
+
+    var priceInput = document.createElement('input');
+    priceInput.type = 'hidden';
+    priceInput.name = 'price';
+    priceInput.value = price;
+
+    // Append the input fields to the form
+    form.appendChild(matchIdInput);
+    form.appendChild(categoryNameInput);
+    form.appendChild(priceInput);
+
+    // Append the form to the body and submit it
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+ <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

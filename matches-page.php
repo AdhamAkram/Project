@@ -56,8 +56,7 @@ function getNames($column , $table, $conn) {
 
 
 $team = getNames("team_name","team", $conn);
-$tournament = getNames("tournament_name","tournament", $conn);
-$stadium = getNames("stadium_name","stadium", $conn);
+
 
 ?>
 <!DOCTYPE html>
