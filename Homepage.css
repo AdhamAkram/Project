@@ -19,10 +19,7 @@ body{
 .fs-4{
     margin-left: 10px;
 }
-  .carousel-inner{
-    width: 1300px;
-    height: 800px;
-  }
+  
   .rounded-circle{
     width: 10%;
     height: 10%;
@@ -167,6 +164,7 @@ body{
   
   .d-block{
     color: #fff;
+    
   }
   
   .navbar {
@@ -1115,3 +1113,32 @@ body{
         margin: 0 auto;
         margin-top:2%;
   }
+  body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .carousel-container {
+    position: relative;
+  }
+
+  .carousel-inner {
+    position: relative;
+  }
+
+  .carousel-indicators {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    width: auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .carousel-indicators button {
+    margin: 0 5px; /* Adjust the margin as needed */
+  }
+  

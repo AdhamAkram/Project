@@ -213,43 +213,51 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
             <span class="fs-4"><strong>Events</strong></span>
           </a>
           <ul class="nav nav-pills">
-            <li class="homebutton" type="button"><a href="#" class="nav-link">View All Events</a></li>
+            <li class="homebutton" type="button"><a href="#" class="nav-link" style="color: black; font-weight:bold;">View All Events</a></li>
           </ul>
         </header>
-     </div>
-     <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class="active" aria-current="true"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
+     </div >
+     
+     
+     <div class="container d-flex align-items-center justify-content-center">
+    <div id="myCarousel" class="carousel slide mb-6 carousel-container" data-bs-ride="carousel" style="width: 700px; height: 400px;">
+      <div class="carousel-inner" style="width: 100%; height: 100%;">
+        <div class="carousel-item">
+          <img src="https://khamsat.hsoubcdn.com/images/services/2038917/4ce881a46b563a3b098cdc1de15090ec.jpg" class="d-block w-100 h-100" alt="Slide 1">
         </div>
-        <div class="carousel-inner">
-          <div class="carousel-item">
-            <img src="https://khamsat.hsoubcdn.com/images/services/2038917/4ce881a46b563a3b098cdc1de15090ec.jpg" width="1300px" height="1300px">
-          </div>
-          <div class="carousel-item active">
-            <img src="https://www.elfagr.org/Upload/libfiles/500/3/371.jpg" width="1300" height="1300px">
-          </div>
-          <div class="carousel-item">
-            <img src="https://khamsat.hsoubcdn.com/images/services/2038917/05a8aa498bba88f9df37d0ad4a5adf13.jpg" width="1300px" height="1300px">
-          </div>
+        <div class="carousel-item active">
+          <img src="https://www.elfagr.org/Upload/libfiles/500/3/371.jpg" class="d-block w-100 h-100" alt="Slide 2">
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
+        <div class="carousel-item">
+          <img src="https://khamsat.hsoubcdn.com/images/services/2038917/05a8aa498bba88f9df37d0ad4a5adf13.jpg" class="d-block w-100 h-100" alt="Slide 3">
+        </div>
       </div>
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" class="active" aria-current="true"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2"></button>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+
+
+
+     
       <div class="headermatches">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
           <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
             <span class="fs-4"><strong>Matches</strong></span>
           </a>
           <ul class="nav nav-pills">
-            <li class="homebutton" type="button"><a href="matches-page.php" class="nav-link">View All Matches</a></li>
+            <li class="homebutton" type="button"><a href="matches-page.php" class="nav-link" style="color: black;font-weight:bold;">View All Matches</a></li>
           </ul>
         </header>
      </div>
