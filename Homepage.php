@@ -48,7 +48,7 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 <link rel="stylesheet" href="matches-page.css" />
-<link rel="stylesheet" href="Homepage.css">
+<!-- <link rel="stylesheet" href="Homepage.css"> -->
 </head>
 <body>
   <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
