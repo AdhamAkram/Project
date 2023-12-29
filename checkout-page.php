@@ -1,4 +1,18 @@
 <?php
+session_start();
+$user_id = $_SESSION['user_id'];
+$username = $_SESSION['username'];
+// Check if the user is logged in
+if (isset($_SESSION['user_id'])) {
+  // Access user details
+  $user_id = $_SESSION['user_id'];
+  $username = $_SESSION['username'];
+  // Access other relevant details
+} else {
+   // Redirect to the login page if not logged in
+   echo '<script>window.location.href = "signin-form.php";</script>';
+   exit();
+}
 $servername = "localhost:3307";
 $username = "root";
 $password = "";
@@ -26,7 +40,7 @@ if ($conn->connect_error) {
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/checkout/">
 
-    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
@@ -34,7 +48,7 @@ if ($conn->connect_error) {
 
     
     <link href="checkout-page.css" rel="stylesheet">
-    <!-- <link href="matches-page.css" rel="stylesheet"> -->
+    
   </head>
  
 
@@ -112,7 +126,7 @@ if ($conn->connect_error) {
 <div class="container">
   <main>
 
-    <form class="needs-validation" novalidate>
+    <form class="needs-validation" novalidate method="post" >
     <div class="checkout-header"></div>
     <div class="row g-5">
       <div class="col-md-5 col-lg-4 order-md-last">
@@ -121,8 +135,8 @@ if ($conn->connect_error) {
          
         </h4>
         <?php
-        $matchId = isset($_POST['match_id']) ? $_POST['match_id'] : '';
-        $categoryName = isset($_POST['category_name']) ? $_POST['category_name'] : '';
+        $match_id = isset($_POST['match_id']) ? $_POST['match_id'] : '';
+        $category_name = isset($_POST['category_name']) ? $_POST['category_name'] : '';
         $price = isset($_POST['price']) ? $_POST['price'] : '';
         $sql = "
         SELECT
@@ -141,7 +155,7 @@ if ($conn->connect_error) {
         JOIN
             stadium s ON m.stadium_id = s.stadium_id
             WHERE
-            m.match_id LIKE '%$matchId%'
+            m.match_id LIKE '%$match_id%'
             
         ";
         $result = $conn->query($sql);
@@ -172,7 +186,7 @@ if ($conn->connect_error) {
     
     
     
-    $conn->close();
+    
     
         ?>
        
@@ -237,13 +251,51 @@ if ($conn->connect_error) {
           </div>
 
           <hr class="my-4">
+          
+          <input type="hidden" name="match_id" value="<?php echo $match_id; ?>" />
+<input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
+<input type="hidden" name="ticket_pricing" value="<?php echo $pricingId; ?>" />
 
-          <button class="w-100 btn btn-dark btn-lg" type="submit">Continue to checkout</button>
+<button class="w-100 btn btn-dark btn-lg" type="submit" name="proceedToCheckout">Proceed to checkout</button>
+<?php
+            // Handle form submission
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['proceedToCheckout'])) {
+                // Assuming $match_id, $category_name, etc. are PHP variables from form fields
+                $match_id = isset($_POST['match_id']) ? $_POST['match_id'] : '';
+                $category_name = isset($_POST['category_name']) ? $_POST['category_name'] : '';
+
+                // Your SQL query for retrieving pricing_id
+                $sqlPricingId = "SELECT pricing_id FROM ticket_pricing WHERE category_name LIKE '$category_name'";
+                $resultPricingId = $conn->query($sqlPricingId);
+
+                if ($resultPricingId) {
+                    $rowPricingId = $resultPricingId->fetch_assoc();
+
+                    if ($rowPricingId) {
+                        $pricingId = $rowPricingId['pricing_id'];
+
+                        // Your SQL query for inserting into the booking table
+                        $sqlInsertBooking = "INSERT INTO booking (user_id, match_id, ticket_category_id, booking_date) VALUES ('$user_id', '$match_id', '$pricingId', NOW())";
+
+                        // Execute the insertion query
+                        if ($conn->query($sqlInsertBooking) === TRUE) {
+                            echo 'Booking successful';
+                        } else {
+                            echo "Error creating booking: " . $conn->error;
+                        }
+                    } else {
+                        echo "No matching record found for pricing_id.";
+                    }
+                } else {
+                    echo "Error executing pricing_id query: " . $conn->error;
+                }
+            }
+            ?>
         </form>
       </div>
     </div>
   </main>
-  
+ 
 
 
 
@@ -263,10 +315,42 @@ if ($conn->connect_error) {
     </footer>
   </div>
 </div>
+
+
 <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="checkout-page.js"></script>
+
+    <!-- Remove the comment tags around this script block -->
+    <script>
+    $(document).ready(function () {
+    // Handle form submission when "Proceed to checkout" button is clicked
+    $("form").submit(function (event) {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Get form data
+        var formData = $(this).serialize();
+
+        // Send AJAX request to the server-side script
+        $.ajax({
+            type: "POST",
+            url: "checkout-page.php", // Replace with the actual server-side script URL
+            data: formData,
+            success: function (response) {
+                // Handle the response from the server
+                alert("BOOKING SUCCESSFUL"); // Display a message or perform other actions
+
+                // Redirect to another page after successful booking
+                window.location.href = "mytickets.php";
+            },
+            error: function () {
+                alert("Error: Unable to process the booking.");
+            }
+        });
+    });
+});
+</script>
   
-  
+<script src="checkout-page.js"></script></body>
   </body>
 </html>

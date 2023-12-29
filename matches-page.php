@@ -283,6 +283,12 @@ JOIN
         WHEN '$filtered' = 'All Teams' THEN 1
         ELSE team1.team_name LIKE '%$filtered%' OR team2.team_name LIKE '%$filtered%'
     END
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM booking b
+      WHERE b.user_id = '$userId'
+      AND b.match_id = m.match_id
+  )
     ORDER BY
     m.match_date ASC
 ";
@@ -485,7 +491,13 @@ JOIN
     tournament t ON m.tournament_id = t.tournament_id
 JOIN
     stadium s ON m.stadium_id = s.stadium_id
-    
+
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM booking b
+      WHERE b.user_id = '$userId'
+      AND b.match_id = m.match_id
+  )
     ORDER BY
     m.match_date ASC
 ";
