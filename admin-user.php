@@ -267,7 +267,7 @@ if (isset($_SESSION['selectedOption'])) {
           $columnData = $rowData[$columnName];
   
           // Generate unique IDs for each input field
-    $inputId = 'disabledInput_' . $columnName;
+          $inputId = 'input_' . $columnName;
     if ($columnName!= 'user_id') {
     // Echo the column name in a span
     echo '<span style="font-weight : bold;">' . $columnName . '</span>';
