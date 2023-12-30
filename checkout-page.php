@@ -24,8 +24,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-
 ?>
+
+
 
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
@@ -126,7 +127,7 @@ if ($conn->connect_error) {
 <div class="container">
   <main>
 
-    <form class="needs-validation" novalidate method="post" >
+  <form class="needs-validation" novalidate method="post">
     <div class="checkout-header"></div>
     <div class="row g-5">
       <div class="col-md-5 col-lg-4 order-md-last">
@@ -181,12 +182,7 @@ if ($conn->connect_error) {
     } else {
         echo "No matches found.";
     }
-    
-    
-    
-    
-    
-    
+  
     
         ?>
        
@@ -252,45 +248,49 @@ if ($conn->connect_error) {
 
           <hr class="my-4">
           
-          <input type="hidden" name="match_id" value="<?php echo $match_id; ?>" />
+<input type="hidden" name="match_id" value="<?php echo $match_id; ?>" />
 <input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
 <input type="hidden" name="ticket_pricing" value="<?php echo $pricingId; ?>" />
+<input type="hidden" name="category_name" value="<?php echo $category_name; ?>" />
 
 <button class="w-100 btn btn-dark btn-lg" type="submit" name="proceedToCheckout">Proceed to checkout</button>
 <?php
-            // Handle form submission
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['proceedToCheckout'])) {
-                // Assuming $match_id, $category_name, etc. are PHP variables from form fields
-                $match_id = isset($_POST['match_id']) ? $_POST['match_id'] : '';
-                $category_name = isset($_POST['category_name']) ? $_POST['category_name'] : '';
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['proceedToCheckout'])) {
+  // Assuming $match_id, $category_name, etc. are PHP variables from form fields
+  $match_id = isset($_POST['match_id']) ? $_POST['match_id'] : '';
+  $category_name = isset($_POST['category_name']) ? $_POST['category_name'] : '';
+  if (empty($match_id) || empty($category_name)) {
+    echo 'Invalid match ID or category name.';
+    exit;
+}
 
-                // Your SQL query for retrieving pricing_id
-                $sqlPricingId = "SELECT pricing_id FROM ticket_pricing WHERE category_name LIKE '$category_name'";
-                $resultPricingId = $conn->query($sqlPricingId);
+  // Query to retrieve pricing_id
+  $sqlPricingId = "SELECT pricing_id FROM ticket_pricing WHERE category_name LIKE '$category_name'";
+  $resultPricingId = $conn->query($sqlPricingId);
 
-                if ($resultPricingId) {
-                    $rowPricingId = $resultPricingId->fetch_assoc();
+  if ($resultPricingId) {
+      $rowPricingId = $resultPricingId->fetch_assoc();
 
-                    if ($rowPricingId) {
-                        $pricingId = $rowPricingId['pricing_id'];
+      if ($rowPricingId) {
+          $pricingId = $rowPricingId['pricing_id'];
 
-                        // Your SQL query for inserting into the booking table
-                        $sqlInsertBooking = "INSERT INTO booking (user_id, match_id, ticket_category_id, booking_date) VALUES ('$user_id', '$match_id', '$pricingId', NOW())";
+          // Query to insert into the booking table
+          $sqlInsertBooking = "INSERT INTO booking (user_id, match_id, ticket_category_id, booking_date) VALUES ('$user_id', '$match_id', '$pricingId', NOW())";
 
-                        // Execute the insertion query
-                        if ($conn->query($sqlInsertBooking) === TRUE) {
-                            echo 'Booking successful';
-                        } else {
-                            echo "Error creating booking: " . $conn->error;
-                        }
-                    } else {
-                        echo "No matching record found for pricing_id.";
-                    }
-                } else {
-                    echo "Error executing pricing_id query: " . $conn->error;
-                }
-            }
-            ?>
+          // Execute the insertion query
+          if ($conn->query($sqlInsertBooking) === TRUE) {
+              echo 'Booking successful';
+          } else {
+              echo "Error creating booking: " . $conn->error;
+          }
+      } else {
+          echo "No matching record found for pricing_id.";
+      }
+  } else {
+      echo "Error executing pricing_id query: " . $conn->error;
+  }
+}
+?>
         </form>
       </div>
     </div>
@@ -322,19 +322,18 @@ if ($conn->connect_error) {
 
     <!-- Remove the comment tags around this script block -->
     <script>
-    $(document).ready(function () {
+   $(document).ready(function () {
     // Handle form submission when "Proceed to checkout" button is clicked
-    $("form").submit(function (event) {
+    $(".needs-validation").submit(function (event) {
         // Prevent the default form submission
-        event.preventDefault();
-
+        
         // Get form data
         var formData = $(this).serialize();
 
         // Send AJAX request to the server-side script
         $.ajax({
             type: "POST",
-            url: "checkout-page.php", // Replace with the actual server-side script URL
+             url: "checkout-page.php", // Replace with the actual server-side script URL
             data: formData,
             success: function (response) {
                 // Handle the response from the server
@@ -349,6 +348,8 @@ if ($conn->connect_error) {
         });
     });
 });
+  
+  
 </script>
   
 <script src="checkout-page.js"></script></body>

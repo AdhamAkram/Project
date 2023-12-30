@@ -154,7 +154,7 @@ $stadium = getNames("stadium_name","stadium", $conn);
                   </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link text-white">
+                    <a href="logout.php" class="nav-link text-white">
                       <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                         <use xlink:href="#signout" />
                       </svg>
@@ -263,7 +263,9 @@ SELECT
     t.tournament_name,
     s.stadium_name,
     m.week,
-    m.stage
+    m.stage,
+    tp.category_name,
+    tp.price
 FROM
     booking
 JOIN
@@ -276,9 +278,11 @@ JOIN
     stadium s ON m.stadium_id = s.stadium_id
 JOIN
     tournament t ON m.tournament_id = t.tournament_id
+JOIN
+    ticket_pricing tp ON booking.ticket_category_id = tp.pricing_id
 WHERE
     booking.user_id LIKE '%$userId%'
-    ORDER BY
+ORDER BY
     m.match_date ASC;
 ";
 $result = $conn->query($sql);
@@ -339,19 +343,16 @@ if ($result->num_rows > 0) {
                                       </div>
                                   </div>
                               </div>
-                             
-                              <button class="button button-black width-auto book-ticket-btn" 
-                              data-bs-toggle="modal" 
-                              data-bs-target="#staticBackdrop"
-                              data-match-id="' . $row["match_id"] . '"
-                              data-team1-name="' . $row["team1_name"] . '"
-                              data-team1-logo="' . $row["team1_logo_url"] . '"
-                              data-team2-name="' . $row["team2_name"] . '"
-                              data-team2-logo="' . $row["team2_logo_url"] . '"
-                             
-                              onclick="bookTicket(this)">
-                              Book Ticket
-                          </button>
+                              
+                              <div class="info" style="font-weight: bold;  background-color: rgba(0, 0, 0, .1);  padding-left:100px ; ">
+                                      <div class="first">
+                                      '. $row["category_name"] .'
+                                      </div>
+                                      <div class="second">
+                                      '. $row["price"] .'  
+                                      </div>
+                                  </div>
+                              
             </div>
           </div>
           <div class="bottom">

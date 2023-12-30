@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password = $_POST["password"];
 
   // SQL query to check user credentials
-  $sql = "SELECT * FROM users WHERE email = '$email' AND password_hash = '$password'";
+  $sql = "SELECT * FROM admins WHERE email = '$email' AND password_hash = '$password'";
   $result = $conn->query($sql);
 
   if ($result->num_rows > 0) {
@@ -120,10 +120,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
        
   
       // // Store user details in the session
-       $_SESSION['user_id'] = $userDetails['user_id'];
+       $_SESSION['admin_id'] = $userDetails['admin_id'];
        $_SESSION['username'] = $userDetails['username'];
        
-      echo '<script>window.location.href = "homepage.php";</script>';
+      echo '<script>window.location.href = "admin-user.php";</script>';
       exit();
   } else {
       echo '<div class="alert alert-danger" role="alert">
@@ -151,13 +151,13 @@ $conn->close();
         <label class="form-check-label">
             Don't have an account?
         </label>
-        <a href="signup.php" class="">Sign In</a>
+        <a href="signup.php" class="">Sign Up</a>
     </div>
     <div class="form-check text-start my-3">
         <label class="form-check-label">
-           Sign in as Admin?
+           Sign in as User?
         </label>
-        <a href="admin-signin.php" class="">Sign Up</a>
+        <a href="signin-form.php" class="">Sign In</a>
     </div>
     <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
 </form>

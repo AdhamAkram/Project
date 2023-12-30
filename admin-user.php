@@ -1,37 +1,70 @@
+<?php
+session_start();
+$servername = "localhost:3307";
+$username = "root";
+$password = "";
+$dbname = "project";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check if the form has been submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Retrieve the selected option from the form
+  $selectedOption = isset($_POST['myDropdown']) ? $_POST['myDropdown'] : "";
+
+  // Store the selected option in the session
+  $_SESSION['selectedOption'] = $selectedOption;
+}
+
+// Retrieve user data from the database
+$sql = "SELECT user_id, username FROM users";
+$result = $conn->query($sql);
+
+// Check if the selected option is stored in the session
+if (isset($_SESSION['selectedOption'])) {
+  // Access the selected option from the session
+  $selectedOption = $_SESSION['selectedOption'];
+} else {
+  // Default value if no option is selected
+  $selectedOption = "None";
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/headers/">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
-    <link rel="stylesheet" href="admin user.css">
+    <title>Admin-Users</title>
+    <link
+      rel="canonical"
+      href="https://getbootstrap.com/docs/5.3/examples/headers/"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"
+    />
+
+    <link href="https://getbootstrap.com/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="matches-page.css" />
+    
 
 
 </head>
 <body>
-    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
-        <symbol id="bootstrap" viewBox="0 0 118 94">
-          <title>Bootstrap</title>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z"></path>
-        </symbol>
-        <symbol id="home" viewBox="0 0 16 16">
-          <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"/>
-        </symbol>
-        <symbol id="profile" viewBox="0 0 16 16">
-            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"/>
-        </symbol>
-        <symbol id="signout" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
-      <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-        </symbol>
-      </svg>
-      
-        
-      </svg>
-      <div class="px-3 py-2 text-bg-dark border-bottom">
+  
+<div class="px-3 py-2 text-bg-dark border-bottom">
       <div class="container">
         <div
           class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
@@ -198,71 +231,144 @@
          
     </svg>
     <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          
-  
-         
-  
-          
-  
-          <div class="text-end">
-            <button type="button" class=>Add </button>
-            <button type="button" class=>####</button>
-          </div>
-        </div>
-      </div>
-<div class="container">
-    <div class="row mb-3 text-center">
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div><div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div><div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div><div class="col-1 themed-grid-col"></div>
-        <div class="col-1 themed-grid-col"></div>
-        <div class="col-1 themed-grid-col"></div>
-      </div>
-      <hr>
-      <form class="row mb-3 text-center">
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <div class="col-1 themed-grid-col">.col-4</div>
-        <a href="#" class="col-1 themed-grid-col">
-            <svg class="bi d-block mx-auto mb-1" width="30" height="30">
-                <use xlink:href="#user" />
-              </svg>
-             
-          </a><a href="#" class="col-1 themed-grid-col">
-            <svg class="bi d-block mx-auto mb-1" width="30" height="30">
-                <use xlink:href="#user" />
-              </svg>
-             
-          </a><a href="#" class="col-1 themed-grid-col">
-            <svg class="bi d-block mx-auto mb-1" width="30" height="30">
-                <use xlink:href="#user" />
-              </svg>
-             
-          </a> 
-          <form class="row mb-3 text-center">
-            <div class="col-1 themed-grid-col">.col-4</div>
-            <div class="col-1 themed-grid-col">.col-4</div>
-            <div class="col-1 themed-grid-col">.col-4</div>
-            <div class="col-1 themed-grid-col">.col-4</div>
-            <div class="col-1 themed-grid-col">.col-4</div>
-            <div class="col-1 themed-grid-col">.col-4</div>
-            <div class="col-1 themed-grid-col">.col-4</div>
-            <div class="col-1 themed-grid-col">.col-4</div>
-            <div class="col-1 themed-grid-col">.col-4</div>
-
-        </div>
+    
       
+<div class="container">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Select User</h5>
+        <select id="myDropdown" name="myDropdown" class="form-control" onchange="this.form.submit()">
+        <?php
+            // Populate the dropdown with user data
+            while ($row = $result->fetch_assoc()) {
+                $userId = $row['user_id'];
+                $username = $row['username'];
+                echo "<option value='$userId' " . ($selectedOption == "$userId" ? 'selected' : '') . ">$userId - $username</option>";
+            }
+            ?>
+        </select>
+    </form>
+
+  <?php
+ 
+  
+  $sqlColumns = "SHOW COLUMNS FROM users";
+  $resultColumns = $conn->query($sqlColumns);
+  
+  // Fetch data for user with id = 1
+  $sqlData = "SELECT * FROM users WHERE user_id LIKE '%$selectedOption%'";
+  $resultData = $conn->query($sqlData);
+  
+  if ($resultData->num_rows > 0) {
+      $rowData = $resultData->fetch_assoc();
+  
+      // Display column names and corresponding data in spans
+      while ($rowColumn = $resultColumns->fetch_assoc()) {
+          $columnName = $rowColumn['Field'];
+          $columnData = $rowData[$columnName];
+  
+          // Generate unique IDs for each input field
+    $inputId = 'disabledInput_' . $columnName;
+    if ($columnName!= 'user_id') {
+    // Echo the column name in a span
+    echo '<span style="font-weight : bold;">' . $columnName . '</span>';
+
+    // Echo the input field with a unique ID and disabled text
+    echo '<input class="form-control" id="' . $inputId . '" type="text" placeholder="' . $columnData . '" name="' . $columnName . '_id">';
+      
+    }
+      }
+      echo '
+      <form method="post" action="">
+      <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="text-end">
+      <input type="hidden" name="user_id" value='.$selectedOption.'>
+      <button type="submit" name="delete">Delete</button>
+        <button type="button" class="editAllButton" name"edit">Edit</button>
+        <button type="submit" name="save" >Confirm Edit </button>
+      </div>
+      </div>
+      </form>
+';
+  } 
+  
+  
+  ?>
+  <?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//     // Assuming you have a form with buttons named "edit" and "delete"
+    
+if (isset($_POST['save'])) {
+  $userIdToEdit = $_POST['user_id'];
+
+  // Retrieve the id for each field from the hidden inputs
+  $newUsernameId = isset($_POST['username_id']) ;
+
+  
+
+  // Update the user data in the database
+  $newUsername = $_POST['username'];
+
+// Retrieve the id for the username field from the hidden input
+$newUsernameId = $_POST['username_id'];
+
+// Assuming you have already retrieved $userIdToEdit
+
+// Update the user data in the database
+$sqlUpdate = "UPDATE users SET username='$newUsername' WHERE user_id='$userIdToEdit'";
+
+  $resultUpdate = $conn->query($sqlUpdate);
+
+  if ($resultUpdate) {
+      // Update successful
+      echo '<script>alert("User updated successfully!");</script>';
+  } else {
+      // Update failed
+      echo "Error updating user: " . $conn->error;
+  }
+} 
+        
+    elseif (isset($_POST['delete']) ) {
+        // Handle the delete action
+         $userIdToDelete = $_POST['user_id'];  // Assuming you have an input with the name "user_id"
+        
+//         // Perform deletion in the database
+         $sqlDelete = "DELETE FROM users WHERE user_id = '$userIdToDelete'";
+         $resultDelete = $conn->query($sqlDelete);
+        
+         if ($resultDelete) {
+             // Deletion successful
+             echo '<script>alert("User deleted successfully!");</script>';
+             echo '<script>window.location.href = "admin-user.php";</script>';
+             // Redirect or perform other actions...
+         } else {
+             // Deletion failed
+             echo "Error deleting user: " . $conn->error;
+         }
+     }
+     elseif (isset($_POST['edit']) ) {
+
+
+     }
+    }
+ 
+$conn->close();
+?>
+
+          
+</div>
+
       
 </body>
+<script>
+// JavaScript to enable all input fields on button click
+document.querySelector('.editAllButton').addEventListener('click', function() {
+    // Select all input fields with class "form-control" and remove the "disabled" attribute
+    document.querySelectorAll('.form-control').forEach(function(inputField) {
+        inputField.removeAttribute('disabled');
+    });
+});
+</script>
 </html>
