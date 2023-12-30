@@ -1,3 +1,15 @@
+<?php
+$servername = "localhost:3307";
+$username = "root";
+$password = "";
+$dbname = "project";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +18,8 @@
     <title>Sign Up</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/headers/">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">    <link rel="stylesheet" href="signup.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">  
+<link rel="stylesheet" href="signup.css">
 </head>
 <body>
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -44,7 +57,7 @@
             class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
           >
             <li>
-              <a href="#" class="nav-link text-dark">
+              <a href="#" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1 color-black" width="24" height="24" >
                   <use xlink:href="#home" />
                 </svg>
@@ -78,30 +91,65 @@
     <div class="center">
       <div class="wrapper" style="display: block;">
         <h2>Registration</h2>
-        <form action="#">
+        <form action="#" method="post">
           <div class="input-box">
-            <input type="text" placeholder="Enter your name" required>
+            <input type="text" name= "name" placeholder="Enter your name" required>
           </div>
           <div class="input-box">
-            <input type="text" placeholder="Enter your email" required>
+            <input type="text" name= "email" placeholder="Enter your email" required>
           </div>
           <div class="input-box">
-            <input type="password" placeholder="Create password" required>
+            <input type="password" name= "password" placeholder="Create password" required>
           </div>
           <div class="input-box">
-            <input type="password" placeholder="Confirm password" required>
+            <input type="password" name= "confirm" placeholder="Confirm password" required>
           </div>
           <div class="policy">
             <input type="checkbox">
             <h3>I accept all terms & condition</h3>
           </div>
           <div class="input-box button">
-            <input type="Submit" value="Register Now">
+            <input type="Submit" name= "register" value="Register">
           </div>
           <div class="text">
             <h3>Already have an account? <a href="#">Login now</a></h3>
           </div>
         </form>
+        <?php
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
+$name = mysqli_real_escape_string($conn, $_POST['name']);
+$email = mysqli_real_escape_string($conn, $_POST['email']);
+$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+$password = $_POST['password'];
+$confirmPassword = $_POST['confirm'];
+
+// Check if the passwords match
+if ($password === $confirmPassword) {
+  $checkEmailQuery = "SELECT COUNT(*) as count FROM users WHERE email = '$email'";
+  $checkEmailResult = mysqli_query($conn, $checkEmailQuery);
+  $emailCount = mysqli_fetch_assoc($checkEmailResult)['count'];
+
+  if ($emailCount > 0) {
+      echo "Error: Email is already in use.";
+  } else {
+      // Insert the user into the users table
+      $insertUserQuery = "INSERT INTO users (username, email, password_hash) VALUES ('$name', '$email', '$password')";
+
+      // Execute the query
+      if (mysqli_query($conn, $insertUserQuery)) {
+        echo '<script>alert("User registered successfully!");</script>';
+        echo '<script>window.location.href = "signin-form.php";</script>';
+
+      } else {
+          echo "Error: " . mysqli_error($conn);
+      }}
+
+} else {
+    // Passwords do not match, show an error message or take appropriate action
+    echo "Passwords do not match!";
+}}
+?>
+
       </div>
     </div>
     
