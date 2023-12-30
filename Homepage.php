@@ -272,7 +272,6 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
      s.stadium_name,
      m.week,
      m.stage,
-     m.available,
      team1.team_name AS team1_name,
      team1.team_logo_url AS team1_logo_url,
      team2.team_name AS team2_name,
@@ -395,9 +394,7 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
            '. $row["stage"] .'
            </div>
          </div>
-         <div class="status green">
-         '. $row["available"] .'
-         </div>
+        
        </div>
      </div>
    </div>

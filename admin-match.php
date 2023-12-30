@@ -1,16 +1,16 @@
 <?php
 session_start();
 $servername = "localhost:3307";
-$username = "root";
+$matchname = "root";
 $password = "";
 $dbname = "project";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $matchname, $password, $dbname);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-$table_name="users";
+$table_name="matches";
 $_SESSION['table_name'] = $table_name;
 // Check if the form has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,8 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $_SESSION['selectedOption'] = $selectedOption;
 }
 
-// Retrieve user data from the database
-$sql = "SELECT user_id, username FROM $table_name";
+// Retrieve match data from the database
+$sql = "SELECT matches.match_id, teams1.team_name AS team1_name, teams2.team_name AS team2_name
+        FROM $table_name AS matches
+        JOIN team AS teams1 ON matches.team1_id = teams1.team_id
+        JOIN team AS teams2 ON matches.team2_id = teams2.team_id";
+
 $result = $conn->query($sql);
 
 // Check if the selected option is stored in the session
@@ -40,7 +44,7 @@ if (isset($_SESSION['selectedOption'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin-User</title>
+    <title>Admin-Matches</title>
     <link
       rel="canonical"
       href="https://getbootstrap.com/docs/5.3/examples/headers/"
@@ -166,9 +170,9 @@ if (isset($_SESSION['selectedOption'])) {
                     <li class="nav-icon">
                       <a href="#" class="nav-link text-black">
                         <svg class="bi d-block mx-auto mb-1" width="30" height="30">
-                            <use xlink:href="#user" />
+                            <use xlink:href="#match" />
                           </svg>
-                         user
+                         match
                       </a>
                     </li>
                     <li class="nav-icon">
@@ -220,7 +224,7 @@ if (isset($_SESSION['selectedOption'])) {
         <symbol id="ticket" height="30" width="30" viewBox=" 0 0 16 16">
             <path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zm4 1a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5M4 8a1 1 0 0 0 1 1h6a1 1 0 1 0 0-2H5a1 1 0 0 0-1 1"/>
         </symbol>  
-        <symbol id="user" height="30" width="30" viewBox=" 0 0 16 16">
+        <symbol id="match" height="30" width="30" viewBox=" 0 0 16 16">
             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
         </symbol> 
         <symbol id="tournament" height="30" width="30" viewBox=" 0 0 16 16">
@@ -241,17 +245,18 @@ if (isset($_SESSION['selectedOption'])) {
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 <div>
   <div class="d-flex justify-content-end">
-<button class="button button-black width-auto  book-ticket-btn" style="margin : 1px; margin-top: 1%;"  id="addNewUserButton" type="submit"  name="add">Add new user</button></div>
-        <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Select User </h5>
+<button class="button button-black width-auto  book-ticket-btn" style="margin : 1px; margin-top: 1%;"  id="addNewmatchButton" type="submit"  name="add">Add new match</button></div>
+        <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Select Match </h5>
         <div>
         <select id="myDropdown" name="myDropdown" class="form-control" onchange="this.form.submit()">
-        <option value="">Select a user</option>
+        <option value="">Select a match</option>
         <?php
-            // Populate the dropdown with user data
+            // Populate the dropdown with match data
             while ($row = $result->fetch_assoc()) {
-                $userId = $row['user_id'];
-                $username = $row['username'];
-                echo "<option value='$userId' " . ($selectedOption == "$userId" ? 'selected' : '') . ">$userId - $username</option>";
+                $match_id = $row['match_id'];
+                $team1 = $row['team1_name'];
+                $team2 = $row['team2_name'];
+                echo "<option value='$match_id' " . ($selectedOption == "$match_id" ? 'selected' : '') . ">$match_id - $team1 vs $team2</option>";
             }
             ?>
         </select>
@@ -262,8 +267,8 @@ if (isset($_SESSION['selectedOption'])) {
   $sqlColumns = "SHOW COLUMNS FROM $table_name";
   $resultColumns = $conn->query($sqlColumns);
   
-  // Fetch data for user with id = 1
-  $sqlData = "SELECT * FROM $table_name WHERE user_id LIKE '%$selectedOption%'";
+  // Fetch data for match with id = 1
+  $sqlData = "SELECT * FROM $table_name WHERE match_id LIKE '%$selectedOption%'";
   $resultData = $conn->query($sqlData);
   
   if ($resultData->num_rows > 0) {
@@ -276,7 +281,7 @@ if (isset($_SESSION['selectedOption'])) {
   
           // Generate unique IDs for each input field
           $inputId = 'input_' . $columnName;
-    if ($columnName!= 'user_id') {
+    if ($columnName!= 'match_id') {
     // Echo the column name in a span
     echo '<span style="font-weight : bold;">' . $columnName . '</span>';
 
@@ -293,7 +298,7 @@ if (isset($_SESSION['selectedOption'])) {
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="d-flex justify-content-end">
-      <input type="hidden" name="user_id" value='.$selectedOption.'>
+      <input type="hidden" name="match_id" value='.$selectedOption.'>
       
       <button class="button button-black width-auto  book-ticket-btn" style="margin : 1px;"  type="submit" name="delete">Delete</button>
         <button class="button button-black width-auto book-ticket-btn editAllButton" style="margin : 1px;"  type="button" name="edit">Edit</button>
@@ -311,47 +316,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //     // Assuming you have a form with buttons named "edit" and "delete"
     
 if (isset($_POST['save'])) {
-  $userIdToEdit= $_POST['user_id'];
-  $usernameId = ($_POST['username_id']);
-  $newPassword= ($_POST['password_hash_id']) ;
-  $newEmail = ($_POST['email_id']) ;
-
-// Update the user data in the database
-$sqlUpdate = "UPDATE $table_name SET username='$usernameId', password_hash='$newPassword', email='$newEmail' WHERE user_id='$userIdToEdit'";
-
+  $matchIdToEdit= $_POST['match_id'];
+  $team1 = ($_POST['team1_id_id']);
+  $team2 = ($_POST['team2_id_id']);
+  $matchDate = ($_POST['match_date_id']) ;
+  $matchTime = ($_POST['match_time_id']) ;
+  $week=($_POST['week_id']) ;
+  $stage=($_POST['stage_id']) ;
+  $tournament=($_POST['tournament_id_id']) ;
+  $stadium=($_POST['stadium_id_id']) ;
+// Update the match data in the database
+$sqlUpdate = "UPDATE $table_name 
+              SET team1_id='$team1', team2_id='$team2', match_date='$matchDate', 
+                  match_time='$matchTime', week='$week', stage='$stage', 
+                  tournament_id='$tournament', stadium_id='$stadium' 
+              WHERE match_id='$matchIdToEdit'";
   $resultUpdate = $conn->query($sqlUpdate);
 
   if ($resultUpdate) {
       // Update successful
-      echo '<script>alert("User UPDATED successfully!");</script>';
-      echo '<script>window.location.href = "admin-user.php";</script>';
+      echo '<script>alert("match UPDATED successfully!");</script>';
+      echo '<script>window.location.href = "admin-match.php";</script>';
   } else {
       // Update failed
-      echo "Error updating user: " . $conn->error;
+      echo "Error updating match: " . $conn->error;
   }
 } 
         
     elseif (isset($_POST['delete']) ) {
         // Handle the delete action
-         $userIdToDelete = $_POST['user_id'];  // Assuming you have an input with the name "user_id"
+         $matchIdToDelete = $_POST['match_id'];  // Assuming you have an input with the name "match_id"
         
-         $usernameId = ($_POST['username_id']);
+         $matchnameId = ($_POST['matchname_id']);
 
-          $sqlDelete = "DELETE FROM $table_name WHERE user_id = '$userIdToDelete'";
+          $sqlDelete = "DELETE FROM $table_name WHERE match_id = '$matchIdToDelete'";
           $resultDelete = $conn->query($sqlDelete);
         
           if ($resultDelete) {
               // Deletion successful
-              echo '<script>alert("User DELETED successfully!");</script>';
-              echo '<script>window.location.href = "admin-user.php";</script>';
+              echo '<script>alert("match DELETED successfully!");</script>';
+              echo '<script>window.location.href = "admin-match.php";</script>';
               // Redirect or perform other actions...
           } else {
               // Deletion failed
-            echo "Error deleting user: " . $conn->error;
+            echo "Error deleting match: " . $conn->error;
           }
      }
      if (isset($_POST['add'])) {
-      echo '<script>window.location.href = "admin-add-user.php";</script>';
+      echo '<script>window.location.href = "admin-add-match.php";</script>';
   } 
     }
  
@@ -372,5 +384,6 @@ document.querySelector('.editAllButton').addEventListener('click', function() {
     });
 });
 </script>
+
 
 </html>

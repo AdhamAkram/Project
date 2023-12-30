@@ -263,7 +263,6 @@ SELECT
     s.stadium_name,
     m.week,
     m.stage,
-    m.available,
     team1.team_name AS team1_name,
     team1.team_logo_url AS team1_logo_url,
     team2.team_name AS team2_name,
@@ -397,9 +396,7 @@ if ($result->num_rows > 0) {
               '. $row["stage"] .'
               </div>
             </div>
-            <div class="status green">
-            '. $row["available"] .'
-            </div>
+           
           </div>
         </div>
       </div>
@@ -478,7 +475,7 @@ SELECT
     s.stadium_name,
     m.week,
     m.stage,
-    m.available,
+   
     team1.team_name AS team1_name,
     team1.team_logo_url AS team1_logo_url,
     team2.team_name AS team2_name,
@@ -606,9 +603,7 @@ if ($result->num_rows > 0) {
                 '. $row["stage"] .'
                 </div>
               </div>
-              <div class="status green">
-              '. $row["available"] .'
-              </div>
+              
             </div>
           </div>
         </div>

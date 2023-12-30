@@ -10,29 +10,17 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-$table_name="users";
-$_SESSION['table_name'] = $table_name;
-// Check if the form has been submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Retrieve the selected option from the form
-  $selectedOption = isset($_POST['myDropdown']) ? $_POST['myDropdown'] : "";
+if (isset($_SESSION['table_name'])) {
+    
+    $table_name= $_SESSION['table_name'] ;
+  } else {
+     // Redirect to the login page if not logged in
+     echo '<script>window.location.href = "admin-user.php";</script>';
+     exit();
+  };
 
-  // Store the selected option in the session
-  $_SESSION['selectedOption'] = $selectedOption;
-}
 
-// Retrieve user data from the database
-$sql = "SELECT user_id, username FROM $table_name";
-$result = $conn->query($sql);
 
-// Check if the selected option is stored in the session
-if (isset($_SESSION['selectedOption'])) {
-  // Access the selected option from the session
-  $selectedOption = $_SESSION['selectedOption'];
-} else {
-  // Default value if no option is selected
-  $selectedOption = "None";
-}
 
 ?>
 <!DOCTYPE html>
@@ -232,98 +220,65 @@ if (isset($_SESSION['selectedOption'])) {
          
     </svg>
     <div class="container">
-    
-    <?php
-// Check if the form is submitted
-
-?>
-<div class="container">
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-<div>
-  <div class="d-flex justify-content-end">
-<button class="button button-black width-auto  book-ticket-btn" style="margin : 1px; margin-top: 1%;"  id="addNewUserButton" type="submit"  name="add">Add new user</button></div>
-        <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Select User </h5>
-        <div>
-        <select id="myDropdown" name="myDropdown" class="form-control" onchange="this.form.submit()">
-        <option value="">Select a user</option>
-        <?php
-            // Populate the dropdown with user data
-            while ($row = $result->fetch_assoc()) {
-                $userId = $row['user_id'];
-                $username = $row['username'];
-                echo "<option value='$userId' " . ($selectedOption == "$userId" ? 'selected' : '') . ">$userId - $username</option>";
-            }
-            ?>
-        </select>
-    </form>
-
-  <?php
+    <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Add User </h5>
    
-  $sqlColumns = "SHOW COLUMNS FROM $table_name";
-  $resultColumns = $conn->query($sqlColumns);
-  
-  // Fetch data for user with id = 1
-  $sqlData = "SELECT * FROM $table_name WHERE user_id LIKE '%$selectedOption%'";
-  $resultData = $conn->query($sqlData);
-  
-  if ($resultData->num_rows > 0) {
-      $rowData = $resultData->fetch_assoc();
-  if ($selectedOption!="") {
-      // Display column names and corresponding data in spans
-      while ($rowColumn = $resultColumns->fetch_assoc()) {
-          $columnName = $rowColumn['Field'];
-          $columnData = $rowData[$columnName];
-  
-          // Generate unique IDs for each input field
-          $inputId = 'input_' . $columnName;
-    if ($columnName!= 'user_id') {
-    // Echo the column name in a span
-    echo '<span style="font-weight : bold;">' . $columnName . '</span>';
+<div class="container">
 
-    // Echo the input field with a unique ID and disabled text
-    echo '<form method="post" action=""> 
-    <input class="form-control" id="' . $inputId . '" type="text" placeholder="' . $columnData . '" value="' . $columnData . '"  name="' . $columnName . '_id" readonly>';
-      
+<?php
+$sqlColumns = "SHOW COLUMNS FROM $table_name";
+$resultColumns = $conn->query($sqlColumns);
+
+echo '<form method="post" action="">';
+
+// Display column names and corresponding empty input fields
+while ($rowColumn = $resultColumns->fetch_assoc()) {
+    $columnName = $rowColumn['Field'];
+
+    // Generate unique IDs for each input field
+    $inputId = 'input_' . $columnName;
+
+    if ($columnName != 'user_id') {
+        // Echo the column name in a span
+        echo '<span style="font-weight : bold;">' . $columnName . '</span>';
+
+        // Echo the input field with a unique ID
+        echo '<input class="form-control" id="' . $inputId . '" type="text" placeholder="' . $columnName . '" name="' . $columnName . '_id">';
     }
-      }
-      echo '
-      <form method="post" action="">
-      <div class="container-fluid">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="d-flex justify-content-end">
-      <input type="hidden" name="user_id" value='.$selectedOption.'>
-      
-      <button class="button button-black width-auto  book-ticket-btn" style="margin : 1px;"  type="submit" name="delete">Delete</button>
-        <button class="button button-black width-auto book-ticket-btn editAllButton" style="margin : 1px;"  type="button" name="edit">Edit</button>
-        <button class="button button-black width-auto book-ticket-btn" style="margin : 1px;"  type="submit" name="save" >Confirm Edit </button>
-      </div>
-      </div>
-      </form>
-';
-  } 
 }
-  
-  ?>
+
+
+
+// Add buttons
+echo '<div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="d-flex justify-content-end">
+            <button class="button button-black width-auto book-ticket-btn" style="margin : 1px;"  type="submit" name="save">Confirm Add </button>
+        </div>
+    </div>';
+
+echo '</form>';
+?>
+
   <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //     // Assuming you have a form with buttons named "edit" and "delete"
     
 if (isset($_POST['save'])) {
   $userIdToEdit= $_POST['user_id'];
-  $usernameId = ($_POST['username_id']);
+  $newUsername = ($_POST['username_id']);
   $newPassword= ($_POST['password_hash_id']) ;
   $newEmail = ($_POST['email_id']) ;
 
 // Update the user data in the database
-$sqlUpdate = "UPDATE $table_name SET username='$usernameId', password_hash='$newPassword', email='$newEmail' WHERE user_id='$userIdToEdit'";
+$sqlInsert = "INSERT INTO $table_name (username, email, password_hash) VALUES ('$newUsername', '$newEmail', '$newPassword')";
 
-  $resultUpdate = $conn->query($sqlUpdate);
+  $resultUpdate = $conn->query($sqlInsert);
 
   if ($resultUpdate) {
       // Update successful
-      echo '<script>alert("User UPDATED successfully!");</script>';
+      echo '<script>alert("User ADDED successfully!");</script>';
       echo '<script>window.location.href = "admin-user.php";</script>';
   } else {
       // Update failed
@@ -331,28 +286,6 @@ $sqlUpdate = "UPDATE $table_name SET username='$usernameId', password_hash='$new
   }
 } 
         
-    elseif (isset($_POST['delete']) ) {
-        // Handle the delete action
-         $userIdToDelete = $_POST['user_id'];  // Assuming you have an input with the name "user_id"
-        
-         $usernameId = ($_POST['username_id']);
-
-          $sqlDelete = "DELETE FROM $table_name WHERE user_id = '$userIdToDelete'";
-          $resultDelete = $conn->query($sqlDelete);
-        
-          if ($resultDelete) {
-              // Deletion successful
-              echo '<script>alert("User DELETED successfully!");</script>';
-              echo '<script>window.location.href = "admin-user.php";</script>';
-              // Redirect or perform other actions...
-          } else {
-              // Deletion failed
-            echo "Error deleting user: " . $conn->error;
-          }
-     }
-     if (isset($_POST['add'])) {
-      echo '<script>window.location.href = "admin-add-user.php";</script>';
-  } 
     }
  
 $conn->close();
@@ -363,14 +296,6 @@ $conn->close();
 
       
 </body>
-<script>
-// JavaScript to enable all input fields on button click
-document.querySelector('.editAllButton').addEventListener('click', function() {
-    // Select all input fields with class "form-control" and remove the "disabled" attribute
-    document.querySelectorAll('.form-control').forEach(function(inputField) {
-        inputField.removeAttribute('readonly');
-    });
-});
-</script>
+
 
 </html>
