@@ -1,3 +1,43 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+ if (isset($_SESSION['user_id'])) {
+//   // Access user details
+  $userId = $_SESSION['user_id'];
+   $username = $_SESSION['username'];
+//   // Access other relevant details
+ } else {
+//   // Redirect to the login page if not logged in
+   echo '<script>window.location.href = "signin-form.php";</script>';
+   exit();
+ }
+$servername = "localhost:3307";
+$username = "root";
+$password = "";
+$dbname = "project";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM users WHERE user_id LIKE $userId ";
+$result = $conn->query($sql);
+
+// Check if there are rows in the result
+if ($result->num_rows > 0) {
+    // Fetch each row and store data in PHP variables
+    while ($row = $result->fetch_assoc()) {
+        $email = $row["email"];
+        $phone = $row["phone"];
+        
+    }
+} else {
+    echo "0 results";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +45,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/headers/">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
-<link rel="stylesheet" href="My Profile.css">
+<link rel="stylesheet" href="myprofile.css">
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -51,7 +91,7 @@
         class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
       >
         <li>
-          <a href="#" class="nav-link text-white">
+          <a href="homepage.php" class="nav-link text-white">
             <svg class="bi d-block mx-auto mb-1 color-black" width="24" height="24" >
               <use xlink:href="#home" />
             </svg>
@@ -59,7 +99,7 @@
           </a>
         </li>
         <li>
-            <a href="#" class="nav-link text-white">
+            <a href="myprofile.php" class="nav-link text-white">
               <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                 <use xlink:href="#profile" />
               </svg>
@@ -67,7 +107,7 @@
             </a>
           </li>
           <li>
-              <a href="#" class="nav-link text-white">
+              <a href="logout.php" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#signout" />
                 </svg>
@@ -91,27 +131,27 @@
       <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
         <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
         <div class="info">
-            <div class="welcome">Welcome</div>
-            <div class="name">أدهم سامي</div>
-            <div class="fan-id">
-                <span class="text-grey-light">Tazkarti ID</span>
-                <span class="id-num">102011900989962</span>
+                <div class="welcome">Welcome</div>
+                <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
+                <div class="fan-id">
+                    <span class="text-grey-light">ID:</span>
+                    <span class="id-num"><?php echo '' .$_SESSION['user_id'].'';  ?></span>
+                </div>
+                <div class="fan-id vaccin-info"><!----></div>
             </div>
-            <div class="fan-id vaccin-info"></div>
-        </div>
         <ul class="navbar-nav col-lg-6 justify-content-lg-center">
             <ul
             class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
           >
             <li class="nav-icon">
-              <a href="#" class="nav-link text-black">
+              <a href="matches-page.php" class="nav-link text-black">
                 <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                     <use xlink:href="#football" />
                   </svg>                    Matches
               </a>
             </li>
             <li class="nav-icon">
-                <a href="#" class="nav-link text-dark">
+                <a href="events.php" class="nav-link text-dark">
                   <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                     <use xlink:href="#event" />
                   </svg>
@@ -119,7 +159,7 @@
                 </a>
               </li>
               <li class="nav-icon">
-                  <a href="#" class="nav-link text-black">
+                  <a href="mytickets.php" class="nav-link text-black">
                     <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                         <use xlink:href="#ticket" />
                       </svg>
@@ -166,113 +206,107 @@
 
 
 
-<div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+<div class="d-md-flex flex-md-equal my-md-3 ps-md-3" style="width: 70%; margin-left: 15%;">
   <div class="bg-body-tertiary me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
     <div class="my-3 p-3">
       <h1 class="display-5"><strong>Status</strong></h1>
-      <h4 class="display-7">Delivered</h4>
-      <p1 class="lead">Tazkarti ID: 00000000000</p1>
+      <h4 class="display-7"><?php echo '' .$_SESSION['username'].'';  ?></h4>
+      <p1 class="lead">Reserva ID: <?php echo '' .$_SESSION['user_id'].'';  ?></p1>
     </div>
     <div class="background">
     <img src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
     </div>
     <br>
   </div>
-  
-  <form class="needs-validation" novalidate="">
-    <hr>
-    <h6 class="personal"><b>Personal information</b></h6>
-    <div class="row g-4">
-      <div class="col-sm-4">
-        <label for="firstName" class="form-label">First name</label>
-        <input type="text" class="form-control" id="firstName" placeholder="" value="" required="" control-id="ControlID-3">
-        <div class="invalid-feedback">
-          Valid first name is required.
-        </div>
-      </div>
-  
-      <div class="col-4">
-        <label for="email" class="form-label">Email </label>
-        <input type="email" class="form-control" id="email" placeholder="you@example.com" control-id="ControlID-6">
-        <div class="invalid-feedback">
-          Please enter a valid email address for shipping updates.
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <label for="firstName" class="form-label">Mobile number</label>
-        <input type="text" class="form-control" id="firstName" placeholder="" value="" required="" control-id="ControlID-3">
-        <div class="invalid-feedback">
-          Valid mobile number is required.
-        </div>
-      </div>
-   
-    </div>
-    <br>
-    <button class="w-100 btn btn-black btn-lg" type="submit" control-id="ControlID-20">
-      <div class="update">Update</div> 
-    </button>
-    <hr>
-    
-    <hr>
+  <div class="container mt-5">
+    <form class="needs-validation" method="post" novalidate>
+        <hr>
+        <h6 class="personal"><b>Personal information</b></h6>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username" value="<?php echo '' .$_SESSION['username'].'';  ?>" required>
+                <div class="invalid-feedback">
+                    Please enter a username.
+                </div>
+            </div>
 
-    <h7 class="account"><b>Account information</b></h7>
-    <div class="row g-4">
-      <div class="col-sm-4">
-        <label for="firstName" class="form-label">Password</label>
-        <input type="text" class="form-control" id="firstName" placeholder="" value="" required="" control-id="ControlID-3">
-        <div class="invalid-feedback">
-          please enter a new password.
+            <div class="col-md-4">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" name="email" value="<?php echo ' ' . $email. '';  ?>" id="email" required>
+                <div class="invalid-feedback">
+                    Please enter a valid email address.
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="phone" class="form-label">Phone number</label>
+                <input type="tel" class="form-control" name="phone" value="<?php echo ' ' . $phone. '';  ?>" id="phone" pattern="\d{11}" required>
+                <div class="invalid-feedback">
+                    Please enter a valid phone number with 11 digits.
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" id="password" required>
+                <div class="invalid-feedback">
+                    Please enter a password.
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" name="confirm" id="confirmPassword" required>
+                <div class="invalid-feedback">
+                    Password and Confirm Password do not match.
+                </div>
+            </div>
+
+            <div class="col-md-12 mt-3 text-end">
+                <button type="submit" class="btn btn-dark">Update</button>
+            </div>
         </div>
-      </div>
+    </form>
+</div>
+
+  
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check if the form fields are set in the $_POST array
+    if (isset($_POST['username'], $_POST['email'], $_POST['phone'], $_POST['password'], $_POST['confirm'])) {
+        
+        // Retrieve data from the form inputs
+        $newUsername = $_POST['username'];
+        $newEmail = $_POST['email'];
+        $newPhone = $_POST['phone'];
+        $newPassword =  $_POST['password'];
+        $confirmPassword =  $_POST['confirm'];
+        echo ''.$newPassword.'';
       
-  
-      <div class="col-4">
-        <label for="email" class="form-label">Confirm password </label>
-        <input type="email" class="form-control" id="email"  control-id="ControlID-6">
-        <div class="invalid-feedback">
-          Please enter the same password.
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <label for="firstName" class="form-label">City</label>
-        <input type="text" class="form-control" id="firstName" placeholder="" value="" required="" control-id="ControlID-3">
-        <div class="invalid-feedback">
-          Valid city is required.
-        </div>
-      </div>
+      
+        // Check if the confirm password matches the new password
+        if ($confirmPassword == $newPassword) {
+          $sqlUpdate = "UPDATE users SET username='$newUsername', password_hash='$newPassword',phone=' $newPhone' ,email='$newEmail' WHERE user_id='$userId'";
 
-      <div class="col-sm-4">
-        <label for="firstName" class="form-label">Region</label>
-        <input type="text" class="form-control" id="firstName" placeholder="" value="" required="" control-id="ControlID-3">
-        <div class="invalid-feedback">
-          Valid region is required.
-        </div>
-      </div>
+  $resultUpdate = $conn->query($sqlUpdate);
 
-      <div class="col-sm-4">
-        <label for="firstName" class="form-label">Address</label>
-        <input type="text" class="form-control" id="firstName" placeholder="" value="" required="" control-id="ControlID-3">
-        <div class="invalid-feedback">
-          Valid address is required.
-        </div>
-      </div>
-
-      <div class="col-sm-4">
-        <label for="firstName" class="form-label">Preferred Team</label>
-        <input type="text" class="form-control" id="firstName" placeholder="" value="" required="" control-id="ControlID-3">
-        <div class="invalid-feedback">
-          Valid Preferred Team is required.
-        </div>
-      </div>
-   
-    </div>
-    <br>
-    <button class="w-100 btn btn-black btn-lg" type="submit" control-id="ControlID-20">
-      <div class="update">Update</div> 
-    </button>
-    <hr>
-  </form>
-  </form>
+  if ($resultUpdate) {
+      // Update successful
+      echo '<script>alert("User UPDATED successfully!");</script>';
+      echo '<script>window.location.href = "logout.php";</script>';
+  } else {
+      // Update failed
+      echo "Error updating user: " . $conn->error;
+  }
+        } else {
+            echo '';
+        }
+    } else {
+        echo 'One or more form fields are not set.';
+    }
+}
+?>
 
 
 </div>
@@ -304,6 +338,67 @@
 
 
 
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<!-- Bootstrap validation script -->
+
+<!-- Bootstrap validation script -->
+<script>
+    (function () {
+        'use strict';
+
+        var form = document.querySelector('.needs-validation');
+
+        form.addEventListener('submit', function (event) {
+            var hasError = false;
+
+            var inputs = form.querySelectorAll('input');
+            inputs.forEach(function (input) {
+                if (input.checkValidity() === false) {
+                    displayError(input, input.validationMessage);
+                    hasError = true;
+                } else {
+                    clearError(input);
+                }
+            });
+
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                displayError(document.getElementById('confirmPassword'), 'Password and Confirm Password do not match.');
+                hasError = true;
+            } else {
+                clearError(document.getElementById('confirmPassword'));
+            }
+
+            if (hasError) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }, false);
+
+        var inputs = form.querySelectorAll('input');
+        inputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                var errorContainer = input.nextElementSibling;
+                clearError(errorContainer);
+            });
+        });
+
+        function displayError(input, message) {
+            var errorContainer = input.nextElementSibling;
+            errorContainer.innerHTML = message;
+            input.classList.add('is-invalid');
+        }
+
+        function clearError(input) {
+            input.innerHTML = '';
+            input.previousElementSibling.classList.remove('is-invalid');
+        }
+    })();
+</script>
 
 
 

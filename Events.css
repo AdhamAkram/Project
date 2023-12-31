@@ -1096,3 +1096,9 @@
 width:400px;
 height: 400px;
  }
+ .custom-width {
+  width: 1000px;
+}
+.card-text{
+  font-weight: bolder;
+}

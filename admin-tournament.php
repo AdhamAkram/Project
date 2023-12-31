@@ -22,16 +22,30 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-if (isset($_SESSION['table_name'])) {
-    
-    $table_name= $_SESSION['table_name'] ;
-  } else {
-     // Redirect to the login page if not logged in
-     echo '<script>window.location.href = "admin-match.php";</script>';
-     exit();
-  };
+$table_name="tournament";
+$_SESSION['table_name'] = $table_name;
+// Check if the form has been submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Retrieve the selected option from the form
+  $selectedOption = isset($_POST['myDropdown']) ? $_POST['myDropdown'] : "";
 
+  // Store the selected option in the session
+  $_SESSION['selectedOption'] = $selectedOption;
+}
 
+// Retrieve match data from the database
+$sql = "SELECT tournament_id, tournament_name FROM tournament;";
+
+$result = $conn->query($sql);
+
+// Check if the selected option is stored in the session
+if (isset($_SESSION['selectedOption'])) {
+  // Access the selected option from the session
+  $selectedOption = $_SESSION['selectedOption'];
+} else {
+  // Default value if no option is selected
+  $selectedOption = "None";
+}
 
 ?>
 <!DOCTYPE html>
@@ -39,7 +53,7 @@ if (isset($_SESSION['table_name'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin-match</title>
+    <title>admin-tournamentes</title>
     <link
       rel="canonical"
       href="https://getbootstrap.com/docs/5.3/examples/headers/"
@@ -228,78 +242,125 @@ if (isset($_SESSION['table_name'])) {
          
     </svg>
     <div class="container">
-    <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Add match </h5>
-   
-<div class="container">
+    
+    <?php
+// Check if the form is submitted
 
-<?php
-$sqlColumns = "SHOW COLUMNS FROM $table_name";
-$resultColumns = $conn->query($sqlColumns);
-
-echo '<form method="post" action="">';
-
-// Display column names and corresponding empty input fields
-while ($rowColumn = $resultColumns->fetch_assoc()) {
-    $columnName = $rowColumn['Field'];
-
-    // Generate unique IDs for each input field
-    $inputId = 'input_' . $columnName;
-
-    if ($columnName != 'match_id') {
-        // Echo the column name in a span
-        echo '<span style="font-weight : bold;">' . $columnName . '</span>';
-
-        // Echo the input field with a unique ID
-        echo '<input class="form-control" id="' . $inputId . '" type="text" placeholder="' . $columnName . '" name="' . $columnName . '_id">';
-    }
-}
-
-
-
-// Add buttons
-echo '<div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="d-flex justify-content-end">
-            <button class="button button-black width-auto book-ticket-btn" style="margin : 1px;"  type="submit" name="save">Confirm Add </button>
-        </div>
-    </div>';
-
-echo '</form>';
 ?>
+<div class="container">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+<div>
+  <div class="d-flex justify-content-end">
+<button class="button button-black width-auto  book-ticket-btn" style="margin : 1px; margin-top: 1%;"  id="addNewmatchButton" type="submit"  name="add">Add new tournament</button></div>
+        <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Select tournament </h5>
+        <div>
+        <select id="myDropdown" name="myDropdown" class="form-control" onchange="this.form.submit()">
+        <option value="">Select a tournament</option>
+        <?php
+            // Populate the dropdown with match data
+            while ($row = $result->fetch_assoc()) {
+                $tournament_id = $row['tournament_id'];
+                $name = $row['tournament_name'];
+                echo "<option value='$tournament_id' " . ($selectedOption == "$tournament_id" ? 'selected' : '') . ">$tournament_id - $name</option>";
+            }
+            ?>
+        </select>
+    </form>
 
+  <?php
+   
+  $sqlColumns = "SHOW COLUMNS FROM $table_name";
+  $resultColumns = $conn->query($sqlColumns);
+  
+  // Fetch data for match with id = 1
+  $sqlData = "SELECT * FROM $table_name WHERE tournament_id LIKE '%$selectedOption%'";
+  $resultData = $conn->query($sqlData);
+  
+  if ($resultData->num_rows > 0) {
+      $rowData = $resultData->fetch_assoc();
+  if ($selectedOption!="") {
+      // Display column names and corresponding data in spans
+      while ($rowColumn = $resultColumns->fetch_assoc()) {
+          $columnName = $rowColumn['Field'];
+          $columnData = $rowData[$columnName];
+  
+          // Generate unique IDs for each input field
+          $inputId = 'input_' . $columnName;
+    if ($columnName!= 'tournament_id') {
+    // Echo the column name in a span
+    echo '<span style="font-weight : bold;">' . $columnName . '</span>';
+
+    // Echo the input field with a unique ID and disabled text
+    echo '<form method="post" action=""> 
+    <input class="form-control" id="' . $inputId . '" type="text" placeholder="' . $columnData . '" value="' . $columnData . '"  name="' . $columnName . '_id" readonly>';
+      
+    }
+      }
+      echo '
+      <form method="post" action="">
+      <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="d-flex justify-content-end">
+      <input type="hidden" name="tournament_id" value='.$selectedOption.'>
+      
+      <button class="button button-black width-auto  book-ticket-btn" style="margin : 1px;"  type="submit" name="delete">Delete</button>
+        <button class="button button-black width-auto book-ticket-btn editAllButton" style="margin : 1px;"  type="button" name="edit">Edit</button>
+        <button class="button button-black width-auto book-ticket-btn" style="margin : 1px;"  type="submit" name="save" >Confirm Edit </button>
+      </div>
+      </div>
+      </form>
+';
+  } 
+}
+  
+  ?>
   <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //     // Assuming you have a form with buttons named "edit" and "delete"
     
 if (isset($_POST['save'])) {
-    $matchIdToEdit= $_POST['match_id'];
-    $team1 = ($_POST['team1_id_id']);
-    $team2 = ($_POST['team2_id_id']);
-    $matchDate = ($_POST['match_date_id']) ;
-    $matchTime = ($_POST['match_time_id']) ;
-    $week=($_POST['week_id']) ;
-    $stage=($_POST['stage_id']) ;
-    $tournament=($_POST['tournament_id_id']) ;
-    $stadium=($_POST['stadium_id_id']) ;
-// Update the user data in the database
-$sqlInsert = "INSERT INTO $table_name (team1_id, team2_id, match_date, match_time, week, stage, tournament_id, stadium_id) 
-VALUES ('$team1', '$team2', '$matchDate', '$matchTime', '$week', '$stage', '$tournament', '$stadium')";
+  $tournamentIdToEdit= $_POST['tournament_id'];
+  $name= $_POST['tournament_name_id'];
+  
+// Update the match data in the database
+$sqlUpdate = "UPDATE tournament
+SET tournament_name = '$name'
+WHERE tournament_id = '$tournamentIdToEdit'";
 
-
-  $resultUpdate = $conn->query($sqlInsert);
+  $resultUpdate = $conn->query($sqlUpdate);
 
   if ($resultUpdate) {
       // Update successful
-      echo '<script>alert("match ADDED successfully!");</script>';
-      echo '<script>window.location.href = "admin-match.php";</script>';
+      echo '<script>alert("ticket UPDATED successfully!");</script>';
+      echo '<script>window.location.href = "admin-tournament.php";</script>';
   } else {
       // Update failed
-      echo "Error updating match: " . $conn->error;
+      echo "Error updating ticket: " . $conn->error;
   }
 } 
         
+    elseif (isset($_POST['delete']) ) {
+        // Handle the delete action
+        $tournamentIdToDelete= $_POST['tournament_id'];
+
+          $sqlDelete = "DELETE FROM $table_name WHERE tournament_id = '$tournamentIdToDelete'";
+          $resultDelete = $conn->query($sqlDelete);
+        
+          if ($resultDelete) {
+              // Deletion successful
+              echo '<script>alert("ticket DELETED successfully!");</script>';
+              echo '<script>window.location.href = "admin-tournament.php";</script>';
+              // Redirect or perform other actions...
+          } else {
+              // Deletion failed
+            echo "Error deleting ticket: " . $conn->error;
+          }
+     }
+     if (isset($_POST['add'])) {
+      echo '<script>window.location.href = "admin-add-tournament.php";</script>';
+  } 
     }
  
 $conn->close();
@@ -310,6 +371,15 @@ $conn->close();
 
       
 </body>
+<script>
+// JavaScript to enable all input fields on button click
+document.querySelector('.editAllButton').addEventListener('click', function() {
+    // Select all input fields with class "form-control" and remove the "disabled" attribute
+    document.querySelectorAll('.form-control').forEach(function(inputField) {
+        inputField.removeAttribute('readonly');
+    });
+});
+</script>
 
 
 </html>

@@ -146,7 +146,7 @@ $stadium = getNames("stadium_name","stadium", $conn);
                 </a>
               </li>
               <li>
-                  <a href="#" class="nav-link text-white">
+                  <a href="myprofile.php" class="nav-link text-white">
                     <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                       <use xlink:href="#profile" />
                     </svg>
@@ -195,7 +195,7 @@ $stadium = getNames("stadium_name","stadium", $conn);
                   </a>
                 </li>
                 <li class="nav-icon">
-                    <a href="#" class="nav-link text-dark">
+                    <a href="events.php" class="nav-link text-dark">
                       <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                         <use xlink:href="#event" />
                       </svg>
@@ -228,7 +228,32 @@ $stadium = getNames("stadium_name","stadium", $conn);
           </button>
   
           <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-            <a class="navbar-brand col-lg-3 me-0" >Matches</a>
+            <a class="navbar-brand col-lg-3 me-0" ></a>
+            <ul class="navbar-nav col-lg-9 justify-content-lg-center">
+    <li class="nav-item">
+    <button id="button1" class="btn btn-dark" onclick="redirectToPage('mytickets.php', this)" disabled>Matches</button>
+<button id="button2" class="btn btn-dark" onclick="redirectToPage('mytickets-events.php', this)">Events</button>
+
+<script>
+  function redirectToPage(page) {
+    // Redirect to the specified page
+    window.location.href = page;
+  }
+</script>
+
+    </li>
+
+          </div>
+        </div>
+      </nav>
+      <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+  
+          <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+            <a class="navbar-brand col-lg-3 me-0" >Your Tickets</a>
             <ul class="navbar-nav col-lg-9 justify-content-lg-center">
     <li class="nav-item">
         <form id="yourFormId" method="post" action="">
@@ -381,8 +406,11 @@ if ($result->num_rows > 0) {
               </div>
             </div>
             <div class="one">
+            <div class="first ng-star-inserted">
+                Ticket ID : 
+              </div>
               <div class="second style-h4N5j" id="style-h4N5j">
-              '. $row["stage"] .'
+              '. $row["booking_id"] .'
               </div>
             </div>
             

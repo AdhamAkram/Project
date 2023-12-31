@@ -145,7 +145,7 @@ $team = getNames("team_name","team", $conn);
                 </a>
               </li>
               <li>
-                  <a href="#" class="nav-link text-white">
+                  <a href="myprofile.php" class="nav-link text-white">
                     <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                       <use xlink:href="#profile" />
                     </svg>
@@ -184,8 +184,7 @@ $team = getNames("team_name","team", $conn);
             </div>
             <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                 <ul
-                class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
-              >
+                class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                 <li class="nav-icon">
                   <a href="matches-page.php" class="nav-link text-black">
                     <svg class="bi d-block mx-auto mb-1" width="30" height="30">
@@ -194,7 +193,7 @@ $team = getNames("team_name","team", $conn);
                   </a>
                 </li>
                 <li class="nav-icon">
-                    <a href="#" class="nav-link text-dark">
+                    <a href="events.php" class="nav-link text-dark">
                       <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                         <use xlink:href="#event" />
                       </svg>

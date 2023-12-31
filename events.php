@@ -1,3 +1,32 @@
+
+<?php
+session_start();
+
+$userId = $_SESSION['user_id'];
+$username = $_SESSION['username'];
+// Check if the user is logged in
+if (isset($_SESSION['user_id'])) {
+  // Access user details
+  $userId = $_SESSION['user_id'];
+  $username = $_SESSION['username'];
+  // Access other relevant details
+} else {
+   // Redirect to the login page if not logged in
+   echo '<script>window.location.href = "signin-form.php";</script>';
+   exit();
+}
+$servername = "localhost:3307";
+$username = "root";
+$password = "";
+$dbname = "project";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +34,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/headers/">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <link rel="stylesheet" href="Events.css">
 </head>
 <body>
@@ -51,7 +81,7 @@
         class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
       >
         <li>
-          <a href="#" class="nav-link text-white">
+          <a href="homepage.php" class="nav-link text-white">
             <svg class="bi d-block mx-auto mb-1 color-black" width="24" height="24" >
               <use xlink:href="#home" />
             </svg>
@@ -59,7 +89,7 @@
           </a>
         </li>
         <li>
-            <a href="#" class="nav-link text-white">
+            <a href="myprofile.php" class="nav-link text-white">
               <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                 <use xlink:href="#profile" />
               </svg>
@@ -67,7 +97,7 @@
             </a>
           </li>
           <li>
-              <a href="#" class="nav-link text-white">
+              <a href="logout.php" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#signout" />
                 </svg>
@@ -88,27 +118,27 @@
     <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
       <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
       <div class="info">
-        <div class="welcome">Welcome</div>
-            <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
-            <div class="fan-id">
-                <span class="text-grey-light">ID:</span>
-                <span class="id-num"><?php echo '' .$_SESSION['user_id'].'';  ?></span>
+            <div class="welcome">Welcome</div>
+                <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
+                <div class="fan-id">
+                    <span class="text-grey-light">ID:</span>
+                    <span class="id-num"><?php echo '' .$_SESSION['user_id'].'';  ?></span>
+                </div>
+                <div class="fan-id vaccin-info"><!----></div>
             </div>
-            <div class="fan-id vaccin-info"><!----></div>
-        </div>
       <ul class="navbar-nav col-lg-6 justify-content-lg-center">
           <ul
           class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
         >
           <li class="nav-icon">
-            <a href="#" class="nav-link text-black">
+            <a href="matches-page.php" class="nav-link text-black">
               <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                   <use xlink:href="#football" />
                 </svg>                    Matches
             </a>
           </li>
           <li class="nav-icon">
-              <a href="#" class="nav-link text-dark">
+              <a href="events.php" class="nav-link text-dark">
                 <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                   <use xlink:href="#event" />
                 </svg>
@@ -116,7 +146,7 @@
               </a>
             </li>
             <li class="nav-icon">
-                <a href="#" class="nav-link text-black">
+                <a href="mytickets.php" class="nav-link text-black">
                   <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                       <use xlink:href="#ticket" />
                     </svg>
@@ -162,26 +192,70 @@
 
 
 
-
+<style>
+  .image {
+    height: 300px; /* Set a fixed height */
+    width: 100%; /* Allow the width to adjust based on the height */
+    object-fit: cover; /* Maintain aspect ratio; cover the container */
+  }
+  .card-description {
+    min-height: 150px; /* Set a minimum height for the card */
+  }
+  
+</style>
+</style>
 
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div class="col">
-          <div class="card shadow-sm">
-            <img class="image" src="https://khamsat.hsoubcdn.com/images/services/2038917/4ce881a46b563a3b098cdc1de15090ec.jpg" >
-            <div class="card-body">
-              <p class="card-text">Color Party with DJ RAINBOW and DJ PAINT, Doors open at 10 PM ,Don't be late.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button class="button button-black width-auto" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                    Book Event
-                  </button>
+        <?php
+        $sql = "SELECT * FROM events";
+
+        // Execute the query
+        $result = $conn->query($sql);
+        
+        // Check if there are rows returned
+        if ($result->num_rows > 0) {
+            // Output data of each row
+            while ($row = $result->fetch_assoc()) {
+                // Print HTML content with the data
+                echo '
+                <div class="col">
+                  <div class="card shadow-sm">
+                    <img class="image" src="'. $row["event_url"] .'" >
+                    <div class="card-body">
+                      <p class="card-description"><strong>'. $row["description"] .'</strong></p>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <p class="card-text"><strong>'. $row["price"] .'</strong></p>
+                        <a href="'. $row["location_url"] .'">
+                          <p class="card-text"><strong>Location: '. $row["location"] .'</strong></p>
+                        </a>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                        <button class="button button-black width-auto book-event-btn"
+        onclick="bookEvent(' . $row["event_id"] . ')">
+    Book Event
+</button>
+
+    
+                          <div></strong></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              ';
+
+            }
+        } else {
+            echo "0 results";
+        }
+        
+        // Close the database connection
+        $conn->close();
+        ?>
+       
        
        
       </div>
@@ -206,6 +280,31 @@
 
 
 
+<script>
+  function bookEvent(eventId) {
+    console.log(eventId);
+
+    // Create a form element
+    var form = document.createElement('form');
+    form.action = 'events-checkout.php';
+    form.method = 'post';
+
+    // Create an input element to store the event ID
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'event_id';
+    input.value = eventId;
+
+    // Append the input to the form
+    form.appendChild(input);
+
+    // Append the form to the body
+    document.body.appendChild(form);
+
+    // Submit the form
+    form.submit();
+  }
+</script>
 
   <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

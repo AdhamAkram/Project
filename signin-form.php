@@ -64,20 +64,12 @@ if ($conn->connect_error) {
         <div
           class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
         >
-          <a
+        <a
             href="/"
             class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"
           >
-            <svg
-              class="bi me-2"
-              width="40"
-              height="32"
-              role="img"
-              aria-label="Bootstrap"
-            >
-              <use xlink:href="#bootstrap" />
-            </svg>
-          </a>
+         <img src="2.svg" width="55" height="55" style="margin-top:15px" alt="Your SVG Image">
+       </a>
 
           <ul
             class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
@@ -91,7 +83,7 @@ if ($conn->connect_error) {
               </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-white">
+                <a href="signup.php" class="nav-link text-white">
                   <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                     <use xlink:href="#register" />
                   </svg>
@@ -136,8 +128,11 @@ $conn->close();
 
 ?>
     <main class="d-flex h-100 align-items-center py-4 bg-body-tertiary">
-    <main class="form-signin w-100 m-auto">
-    <form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+      
+    <main class="form-signin m-auto" >
+       
+    <img src="1.svg" width="200" height="200" style="display: block; margin-left: auto; margin-right: auto;" alt="Your SVG Image">
+        <form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?> ">
     <div class="form-floating">
         <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
         <label for="floatingInput">Email address</label>
@@ -151,13 +146,13 @@ $conn->close();
         <label class="form-check-label">
             Don't have an account?
         </label>
-        <a href="signup.php" class="">Sign In</a>
+        <a href="signup.php" class="">Sign Up</a>
     </div>
     <div class="form-check text-start my-3">
         <label class="form-check-label">
            Sign in as Admin?
         </label>
-        <a href="admin-signin.php" class="">Sign Up</a>
+        <a href="admin-signin.php" class="">Sign In</a>
     </div>
     <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
 </form>

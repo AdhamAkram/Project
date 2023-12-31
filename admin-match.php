@@ -1,6 +1,17 @@
 <?php
 session_start();
-$servername = "localhost:3307";
+
+// Check if the user is logged in
+ if (isset($_SESSION['admin_id'])) {
+//   // Access user details
+  $userId = $_SESSION['admin_id'];
+   $username = $_SESSION['username'];
+//   // Access other relevant details
+ } else {
+//   // Redirect to the login page if not logged in
+   echo '<script>window.location.href = "signin-form.php";</script>';
+   exit();
+ }$servername = "localhost:3307";
 $matchname = "root";
 $password = "";
 $dbname = "project";
@@ -78,15 +89,11 @@ if (isset($_SESSION['selectedOption'])) {
             href="/"
             class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"
           >
-            <svg
-              class="bi me-2"
-              width="40"
-              height="32"
-              role="img"
-              aria-label="Bootstrap"
-            >
-              <use xlink:href="#bootstrap" />
-            </svg>
+         
+       
+        <img src="2.svg" width="55" height="55" style="margin-top:15px" alt="Your SVG Image">
+    
+
           </a>
       
           <ul
@@ -100,16 +107,9 @@ if (isset($_SESSION['selectedOption'])) {
                 Home
               </a>
             </li>
-            <li>
-                <a href="#" class="nav-link text-white">
-                  <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                    <use xlink:href="#profile" />
-                  </svg>
-                  My Profile
-                </a>
-              </li>
+            
               <li>
-                  <a href="#" class="nav-link text-white">
+                  <a href="logout.php" class="nav-link text-white">
                     <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                       <use xlink:href="#signout" />
                     </svg>
@@ -130,27 +130,27 @@ if (isset($_SESSION['selectedOption'])) {
           <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
             <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
             <div class="info">
-                <div class="welcome">Welcome</div>
-                <div class="name">أدهم سامي</div>
-                <div class="fan-id">
-                    <span class="text-grey-light">Tazkarti ID</span>
-                    <span class="id-num">102011900989962</span>
-                </div>
-                <div class="fan-id vaccin-info"></div>
-            </div>
+              <div class="welcome">Welcome</div>
+              <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
+              <div class="fan-id">
+                  <span class="text-grey-light">ID:</span>
+                  <span class="id-num"><?php echo '' .$_SESSION['admin_id'].'';  ?></span>
+              </div>
+              <div class="fan-id vaccin-info"><!----></div>
+          </div>
             <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                 <ul
                 class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
               >
-                <li class="nav-icon">
-                  <a href="#" class="nav-link text-black">
+              <li class="nav-icon">
+                  <a href="admin-match.php" class="nav-link text-black">
                     <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                         <use xlink:href="#football" />
                       </svg>                    Matches
                   </a>
                 </li>
                 <li class="nav-icon">
-                    <a href="#" class="nav-link text-dark">
+                    <a href="admin-events.php" class="nav-link text-dark">
                       <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                         <use xlink:href="#event" />
                       </svg>
@@ -158,7 +158,7 @@ if (isset($_SESSION['selectedOption'])) {
                     </a>
                   
                       <li class="nav-icon">
-                        <a href="#" class="nav-link text-black">
+                        <a href="admin-booking.php" class="nav-link text-black">
                           <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                               <use xlink:href="#ticket" />
                             </svg>
@@ -168,27 +168,35 @@ if (isset($_SESSION['selectedOption'])) {
                     </a>
                   
                     <li class="nav-icon">
-                      <a href="#" class="nav-link text-black">
+                      <a href="admin-user.php" class="nav-link text-black">
                         <svg class="bi d-block mx-auto mb-1" width="30" height="30">
-                            <use xlink:href="#match" />
+                            <use xlink:href="#user" />
                           </svg>
-                         match
+                         user
                       </a>
                     </li>
                     <li class="nav-icon">
-                        <a href="#" class="nav-link text-black">
+                        <a href="admin-tournament.php" class="nav-link text-black">
                           <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                               <use xlink:href="#tournament" />
                             </svg>
-                            tournament
+                            tournaments
                         </a>
                       </li>
                       <li class="nav-icon">
-                        <a href="#" class="nav-link text-black">
+                        <a href="admin-team.php" class="nav-link text-black">
                           <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                               <use xlink:href="#team" />
                             </svg>
-                            team
+                            teams
+                        </a>
+                      </li>
+                    <li class="nav-icon">
+                        <a href="admin-stadium.php" class="nav-link text-black">
+                          <svg class="bi d-block mx-auto mb-1" width="30" height="30">
+                              <use xlink:href="#stadium" />
+                            </svg>
+                            stadiums
                         </a>
                       </li>
               </ul>
@@ -224,15 +232,15 @@ if (isset($_SESSION['selectedOption'])) {
         <symbol id="ticket" height="30" width="30" viewBox=" 0 0 16 16">
             <path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zm4 1a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5M4 8a1 1 0 0 0 1 1h6a1 1 0 1 0 0-2H5a1 1 0 0 0-1 1"/>
         </symbol>  
-        <symbol id="match" height="30" width="30" viewBox=" 0 0 16 16">
+        <symbol id="user" height="30" width="30" viewBox=" 0 0 16 16">
             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
         </symbol> 
         <symbol id="tournament" height="30" width="30" viewBox=" 0 0 16 16">
             <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5c0 .538-.012 1.05-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33.076 33.076 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935zm10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/>
         </symbol>  
-        <symbol id="team" height="30" width="30" viewBox=" 0 0 16 16">
-            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-        </symbol> 
+        <symbol id="stadium" viewBox="0 0 511.957 511.957" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M507.691,110.215l-42.667-32c-3.221-2.411-7.552-2.816-11.157-1.003c-3.605,1.813-5.888,5.504-5.888,9.536v95.637 c-36.373-10.987-89.365-16.235-132.117-18.709c-1.088-0.832-2.347-1.493-3.733-1.877c-2.923-0.811-5.888-0.235-8.32,1.237 c-20.373-1.003-37.419-1.387-47.829-1.515V134.77l38.4-28.8c2.688-2.005,4.267-5.184,4.267-8.533c0-3.349-1.579-6.528-4.267-8.533 l-42.667-32c-3.2-2.432-7.552-2.795-11.157-1.003c-3.627,1.813-5.909,5.504-5.909,9.536v96.085 c-10.411,0.149-27.456,0.533-47.829,1.515c-2.432-1.472-5.397-2.027-8.32-1.237c-1.408,0.384-2.667,1.045-3.733,1.877 c-52.16,3.029-119.616,10.155-153.451,26.816v-34.411l38.4-28.8c2.709-2.005,4.267-5.184,4.267-8.533 c0-3.349-1.579-6.528-4.267-8.533l-42.667-32c-3.221-2.411-7.509-2.816-11.157-1.003C2.283,79.026,0,82.717,0,86.749v128 c0,0.256,0.021,0.683,0.064,1.173l21.205,190.827c0,33.003,84.117,45.568,149.333,50.368v-71.701c0-17.643,14.357-32,32-32h85.333 c17.643,0,32,14.357,32,32v71.765c65.216-4.693,149.312-17.003,149.269-49.259l21.141-190.229c0-0.085,0.021-0.192,0.021-0.277 c0.043-0.491,0.107-1.003,0.149-1.472c0.043-0.491,0.064-0.917,0.064-1.173c0-9.771-8.107-17.749-21.333-24.256v-34.411 l38.443-28.821c2.688-2.005,4.267-5.184,4.267-8.533C511.957,115.399,510.379,112.221,507.691,110.215z M21.76,214.834 c3.499-4.779,18.347-10.859,43.648-16.469c0.299,0.576,0.469,1.195,0.875,1.707l29.333,36.672 C51.627,229.959,26.24,221.127,21.76,214.834z M125.675,240.647c-0.277-0.448-0.384-1.003-0.747-1.451l-36.245-45.312 c22.933-3.84,51.285-7.147,85.013-9.131l16.576,60.757C166.336,244.466,144.789,242.759,125.675,240.647z M277.995,246.301 c-2.539,0.064-4.949,0.171-7.531,0.213c-8.171,0.149-16.555,0.235-25.173,0.235c-8.64,0-17.045-0.085-25.237-0.235 c-2.56-0.043-4.949-0.149-7.467-0.213l-17.067-62.592c15.637-0.619,32.213-0.96,49.771-0.96c17.557,0,34.133,0.341,49.771,0.96 L277.995,246.301z M364.907,240.669c-2.624,0.299-5.141,0.597-7.872,0.875c-2.901,0.299-6.037,0.555-9.045,0.811 c-3.456,0.32-6.827,0.64-10.432,0.939c-3.605,0.277-7.445,0.512-11.179,0.768c-3.243,0.213-6.357,0.469-9.707,0.661 c-4.352,0.256-8.96,0.448-13.504,0.661c-0.96,0.043-1.877,0.085-2.837,0.128l16.576-60.779c33.771,2.005,62.165,5.269,85.12,9.003 l-36.373,45.483C365.291,239.666,365.184,240.199,364.907,240.669z M469.376,213.789l-0.064,0.277 c-0.192,0.341-0.597,0.725-0.917,1.088c-0.363,0.405-0.619,0.789-1.131,1.216c-0.448,0.363-1.088,0.747-1.643,1.109 c-0.683,0.448-1.28,0.896-2.133,1.365c-0.661,0.363-1.536,0.747-2.283,1.109c-1.003,0.491-1.941,0.981-3.136,1.493 c-0.875,0.384-1.963,0.747-2.944,1.131c-1.344,0.512-2.624,1.045-4.139,1.557c-1.088,0.384-2.389,0.747-3.584,1.131 c-1.664,0.533-3.264,1.067-5.12,1.6c-1.323,0.384-2.837,0.747-4.245,1.131c-2.005,0.533-3.925,1.067-6.101,1.6 c-1.451,0.341-3.093,0.683-4.608,1.045c-2.389,0.555-4.736,1.088-7.317,1.621c-1.664,0.341-3.52,0.661-5.248,1.003 c-2.688,0.512-5.291,1.045-8.171,1.557c-2.069,0.363-4.331,0.704-6.485,1.067c-1.685,0.277-3.349,0.555-5.099,0.832l29.312-36.629 c0.491-0.619,0.704-1.344,1.045-2.027C451.648,203.655,466.773,209.629,469.376,213.789z"></path> </g> </g> </g></symbol>
+        <symbol id="team" viewBox="0 0 459.413 459.413" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M446.06,252.506c-52.807-56.162-33.378-166.647-23.988-207c1.979-8.443-1.892-11.123-9.883-7.738 C344.655,66.429,241.721,7.436,230.259,0.651V0c0,0-0.222,0.134-0.553,0.328C229.386,0.134,229.159,0,229.159,0v0.651 C217.698,7.443,114.761,66.429,47.229,37.768c-7.985-3.384-11.856-0.697-9.887,7.738c9.399,40.345,28.817,150.83-23.984,207 c-5.941,6.319-4.593,10.535,4.076,10.535h30.224c0,0,6.562,131.548,181.502,195.943v0.429c0.188-0.076,0.361-0.145,0.547-0.212 c0.188,0.067,0.36,0.136,0.553,0.212v-0.429c174.94-64.396,181.5-195.943,181.5-195.943h30.22 C450.651,263.041,451.994,258.825,446.06,252.506z M231.562,346.199c-0.441,0-0.866-0.064-1.303-0.064 c-0.373,0-0.725-0.044-1.092-0.052c-72.46-1.294-131.031-60.54-131.031-133.307c0-72.767,58.57-132.012,131.031-133.307 c0.367-0.008,0.719-0.054,1.092-0.054c0.437-0.008,0.862-0.064,1.303-0.064c73.576,0,133.435,59.859,133.435,133.434 C364.997,286.353,305.138,346.199,231.562,346.199z"></path> <path d="M230.275,177.032c-0.008,0-0.016,0-0.024,0c-0.379,0-0.723,0.102-1.092,0.11c-19.211,0.605-34.63,16.276-34.63,35.634 c0,19.36,15.418,35.033,34.63,35.63c0.369,0.016,0.722,0.112,1.092,0.112c0.008,0,0.016,0,0.024,0 c19.74,0,35.738-15.998,35.738-35.743S250.016,177.032,230.275,177.032z"></path> <path d="M231.562,91.119c-0.441,0-0.866,0.064-1.303,0.064c-0.373,0-0.725,0.046-1.092,0.054 c-65.966,1.296-119.255,55.258-119.255,121.531c0,66.271,53.289,120.235,119.255,121.529c0.367,0.009,0.719,0.057,1.092,0.057 c0.437,0.008,0.862,0.068,1.303,0.068c67.08,0,121.658-54.586,121.658-121.662C353.22,145.68,298.642,91.119,231.562,91.119z M311.578,266.588c-12.23-9.658-29.815-10.508-43.071-0.934c-13.261,9.581-17.97,26.573-12.62,41.216 c-8.163,2.229-16.751,3.435-25.611,3.435c-0.008,0-0.016,0-0.024,0c-0.371,0-0.731-0.032-1.092-0.032 c-8.966-0.108-17.641-1.418-25.874-3.795c5.566-14.559,1.104-31.606-12.014-41.389c-13.108-9.786-30.699-9.185-43.066,0.288 c-9.131-14.197-14.689-30.893-15.378-48.826c15.575,0.706,30.36-8.87,35.521-24.397c5.16-15.513-0.92-32.031-13.8-40.802 c10.811-13.305,25.043-23.708,41.349-29.867c4.144,14.653,17.389,25.425,33.246,25.92c0.369,0.008,0.721,0.096,1.09,0.096 c0.01,0,0.018,0,0.026,0c16.359,0,30.128-11.006,34.368-26.016c16.852,6.366,31.462,17.26,42.395,31.198 c-13.016,8.54-19.388,24.946-14.495,40.547c4.897,15.613,19.524,25.449,35.109,25.008 C326.662,236.047,320.875,252.582,311.578,266.588z"></path> </g> </g> </g></svg>
+    </svg>
          
     </svg>
     <div class="container">

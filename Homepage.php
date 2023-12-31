@@ -102,7 +102,7 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
           </a>
         </li>
         <li>
-            <a href="#" class="nav-link text-white">
+            <a href="myprofile.php" class="nav-link text-white">
               <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                 <use xlink:href="#profile" />
               </svg>
@@ -156,7 +156,7 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
             </a>
           </li>
           <li class="nav-icon">
-              <a href="#" class="nav-link text-dark">
+              <a href="events.php" class="nav-link text-dark">
                 <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                   <use xlink:href="#event" />
                 </svg>
@@ -213,7 +213,7 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
             <span class="fs-4"><strong>Events</strong></span>
           </a>
           <ul class="nav nav-pills">
-            <li class="homebutton" type="button"><a href="#" class="nav-link" style="color: black; font-weight:bold;">View All Events</a></li>
+            <li class="homebutton" type="button"><a href="events.php" class="nav-link" style="color: black; font-weight:bold;">View All Events</a></li>
           </ul>
         </header>
      </div >
@@ -221,16 +221,30 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
      
      <div class="container d-flex align-items-center justify-content-center">
     <div id="myCarousel" class="carousel slide mb-6 carousel-container" data-bs-ride="carousel" style="width: 700px; height: 400px;">
-      <div class="carousel-inner" style="width: 100%; height: 100%;">
-        <div class="carousel-item">
-          <img src="https://khamsat.hsoubcdn.com/images/services/2038917/4ce881a46b563a3b098cdc1de15090ec.jpg" class="d-block w-100 h-100" alt="Slide 1">
-        </div>
-        <div class="carousel-item active">
-          <img src="https://www.elfagr.org/Upload/libfiles/500/3/371.jpg" class="d-block w-100 h-100" alt="Slide 2">
-        </div>
-        <div class="carousel-item">
-          <img src="https://khamsat.hsoubcdn.com/images/services/2038917/05a8aa498bba88f9df37d0ad4a5adf13.jpg" class="d-block w-100 h-100" alt="Slide 3">
-        </div>
+        <div class="carousel-inner" style="width: 100%; height: 100%;">
+        <?php
+            $sql = "SELECT event_url FROM events LIMIT 2";
+            $result = $conn->query($sql);
+
+            $active = true; // Variable to track the active class for the first item
+
+            if ($result->num_rows > 0) {
+                // Output data of each row
+                while($row = $result->fetch_assoc()) {
+                    // Use the $active variable to determine if it's the first item
+                    $activeClass = $active ? 'active' : '';
+                    
+                    echo '<div class="carousel-item ' . $activeClass . '">
+                            <img src="' . $row["event_url"] . '" class="d-block w-100 h-100"  alt="Slide">
+                          </div>';
+                    
+                    $active = false; // Set to false after the first item
+                }
+            } else {
+                echo "0 results";
+            }
+        ?>
+       
       </div>
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>
@@ -265,30 +279,37 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
 
      $sql = "
      SELECT
-     m.match_id,
-     m.match_date,
-     m.match_time,
-     t.tournament_name,
-     s.stadium_name,
-     m.week,
-     m.stage,
-     team1.team_name AS team1_name,
-     team1.team_logo_url AS team1_logo_url,
-     team2.team_name AS team2_name,
-     team2.team_logo_url AS team2_logo_url
- FROM 
-     matches m
- JOIN
-     team team1 ON m.team1_id = team1.team_id
- JOIN
-     team team2 ON m.team2_id = team2.team_id
-     JOIN
-     tournament t ON m.tournament_id = t.tournament_id
- JOIN
-     stadium s ON m.stadium_id = s.stadium_id
-    
-         ORDER BY
-         m.match_date ASC
+    m.match_id,
+    m.match_date,
+    m.match_time,
+    t.tournament_name,
+    s.stadium_name,
+    m.week,
+    m.stage,
+   
+    team1.team_name AS team1_name,
+    team1.team_logo_url AS team1_logo_url,
+    team2.team_name AS team2_name,
+    team2.team_logo_url AS team2_logo_url
+FROM
+    matches m
+JOIN
+    team team1 ON m.team1_id = team1.team_id
+JOIN
+    team team2 ON m.team2_id = team2.team_id
+    JOIN
+    tournament t ON m.tournament_id = t.tournament_id
+JOIN
+    stadium s ON m.stadium_id = s.stadium_id
+
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM booking b
+      WHERE b.user_id = '$userId'
+      AND b.match_id = m.match_id
+  )
+    ORDER BY
+    m.match_date ASC
          LIMIT 3;
      ";
      $result = $conn->query($sql);

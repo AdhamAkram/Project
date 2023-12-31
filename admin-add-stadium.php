@@ -27,7 +27,7 @@ if (isset($_SESSION['table_name'])) {
     $table_name= $_SESSION['table_name'] ;
   } else {
      // Redirect to the login page if not logged in
-     echo '<script>window.location.href = "admin-match.php";</script>';
+     echo '<script>window.location.href = "admin-stadium.php";</script>';
      exit();
   };
 
@@ -39,7 +39,7 @@ if (isset($_SESSION['table_name'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin-match</title>
+    <title>admin-stadium</title>
     <link
       rel="canonical"
       href="https://getbootstrap.com/docs/5.3/examples/headers/"
@@ -91,7 +91,6 @@ if (isset($_SESSION['table_name'])) {
                 Home
               </a>
             </li>
-            
               <li>
                   <a href="logout.php" class="nav-link text-white">
                     <svg class="bi d-block mx-auto mb-1" width="24" height="24">
@@ -114,14 +113,14 @@ if (isset($_SESSION['table_name'])) {
           <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
             <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
             <div class="info">
-              <div class="welcome">Welcome</div>
-              <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
-              <div class="fan-id">
-                  <span class="text-grey-light">ID:</span>
-                  <span class="id-num"><?php echo '' .$_SESSION['admin_id'].'';  ?></span>
-              </div>
-              <div class="fan-id vaccin-info"><!----></div>
-          </div>
+                <div class="welcome">Welcome</div>
+                <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
+                <div class="fan-id">
+                    <span class="text-grey-light">ID:</span>
+                    <span class="id-num"><?php echo '' .$_SESSION['admin_id'].'';  ?></span>
+                </div>
+                <div class="fan-id vaccin-info"><!----></div>
+            </div>
             <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                 <ul
                 class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
@@ -228,7 +227,7 @@ if (isset($_SESSION['table_name'])) {
          
     </svg>
     <div class="container">
-    <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Add match </h5>
+    <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Add stadium </h5>
    
 <div class="container">
 
@@ -245,7 +244,7 @@ while ($rowColumn = $resultColumns->fetch_assoc()) {
     // Generate unique IDs for each input field
     $inputId = 'input_' . $columnName;
 
-    if ($columnName != 'match_id') {
+    if ($columnName != 'stadium_id') {
         // Echo the column name in a span
         echo '<span style="font-weight : bold;">' . $columnName . '</span>';
 
@@ -274,29 +273,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //     // Assuming you have a form with buttons named "edit" and "delete"
     
 if (isset($_POST['save'])) {
-    $matchIdToEdit= $_POST['match_id'];
-    $team1 = ($_POST['team1_id_id']);
-    $team2 = ($_POST['team2_id_id']);
-    $matchDate = ($_POST['match_date_id']) ;
-    $matchTime = ($_POST['match_time_id']) ;
-    $week=($_POST['week_id']) ;
-    $stage=($_POST['stage_id']) ;
-    $tournament=($_POST['tournament_id_id']) ;
-    $stadium=($_POST['stadium_id_id']) ;
+  $stadiumIdToEdit= $_POST['stadium_id'];
+  $name= $_POST['stadium_name_id'];
+  
 // Update the user data in the database
-$sqlInsert = "INSERT INTO $table_name (team1_id, team2_id, match_date, match_time, week, stage, tournament_id, stadium_id) 
-VALUES ('$team1', '$team2', '$matchDate', '$matchTime', '$week', '$stage', '$tournament', '$stadium')";
+$sqlInsert = "INSERT INTO stadium (stadium_name)
+VALUES (' $name');";
 
 
   $resultUpdate = $conn->query($sqlInsert);
 
   if ($resultUpdate) {
       // Update successful
-      echo '<script>alert("match ADDED successfully!");</script>';
-      echo '<script>window.location.href = "admin-match.php";</script>';
+      echo '<script>alert("stadium ADDED successfully!");</script>';
+      echo '<script>window.location.href = "admin-stadium.php";</script>';
   } else {
       // Update failed
-      echo "Error updating match: " . $conn->error;
+      echo "Error updating stadium: " . $conn->error;
   }
 } 
         
