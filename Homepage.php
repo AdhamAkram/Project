@@ -487,7 +487,7 @@ Book Ticket
      
      
      ?>
- 
+    </div>
     <div class="px-3 py-2 text-bg-dark border-bottom">
       <div class="container">
         <footer class="py-3 my-4">
