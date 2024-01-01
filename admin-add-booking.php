@@ -112,7 +112,7 @@ if (isset($_SESSION['table_name'])) {
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-            <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
+          <img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px; margin-left: 80px;" src="https://scontent.fcai19-3.fna.fbcdn.net/v/t39.30808-6/328553536_723427136242630_2529008484029571012_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=Md__HbQ-fiMAX-WiuTB&_nc_ht=scontent.fcai19-3.fna&oh=00_AfAi8d9a22DNbR_qpFg9C6drysmpHA-krrEUoc47ZY7rqA&oe=6597C72A">
             <div class="info">
                 <div class="welcome">Welcome</div>
                 <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>

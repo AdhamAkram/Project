@@ -164,7 +164,7 @@ $team = getNames("team_name","team", $conn);
           </button>
   
           <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-            <img class="rounded-circle" src="">
+          <img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px; margin-left: 80px;" src="https://scontent.fcai19-3.fna.fbcdn.net/v/t39.30808-6/369675714_6483189295096607_3828070841385855754_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=3V2Eknou080AX8QxycK&_nc_ht=scontent.fcai19-3.fna&oh=00_AfC3yoxuu-uxaBC8MNHJcdB4OvNvCjchn53o_vtw25lIiQ&oe=65985751">
             <div class="info">
             <div class="welcome">Welcome</div>
                 <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>

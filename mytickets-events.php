@@ -117,7 +117,7 @@ if ($conn->connect_error) {
           </button>
   
           <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-            <img class="rounded-circle" src="">
+          <img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px; margin-left: 80px;" src="https://scontent.fcai19-3.fna.fbcdn.net/v/t39.30808-6/369675714_6483189295096607_3828070841385855754_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=3V2Eknou080AX8QxycK&_nc_ht=scontent.fcai19-3.fna&oh=00_AfC3yoxuu-uxaBC8MNHJcdB4OvNvCjchn53o_vtw25lIiQ&oe=65985751">
             <div class="info">
                 <div class="welcome">Welcome</div>
                 <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
@@ -269,17 +269,14 @@ if ($conn->connect_error) {
                     <div class="card-body">
                       <p class="card-description"><strong>'. $row["description"] .'</strong></p>
                       <div class="d-flex justify-content-between align-items-center">
-                        <p class="card-text"><strong>'. $row["price"] .'</strong></p>
+                        <p class="card-text"><strong>Price: '. $row["price"] .' LE</strong></p>
                         <a href="'. $row["location_url"] .'">
                           <p class="card-text"><strong>Location: '. $row["location"] .'</strong></p>
                         </a>
                       </div>
                       <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
-                        <button class="button button-black width-auto book-event-btn"
-        onclick="bookEvent(' . $row["event_id"] . ')">
-    Book Event
-</button>
+                       
 
     
                           <div></strong></div>

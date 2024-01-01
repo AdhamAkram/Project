@@ -101,6 +101,12 @@ if ($conn->connect_error) {
     </div>
   </div>
 </div>
+<style>
+        img{
+          width: 50px;
+          height: 50px;
+        }
+      </style>
 <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,7 +114,7 @@ if ($conn->connect_error) {
     </button>
 
     <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-      <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
+    <img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px; margin-left: 80px;" src="https://scontent.fcai19-3.fna.fbcdn.net/v/t39.30808-6/369675714_6483189295096607_3828070841385855754_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=3V2Eknou080AX8QxycK&_nc_ht=scontent.fcai19-3.fna&oh=00_AfC3yoxuu-uxaBC8MNHJcdB4OvNvCjchn53o_vtw25lIiQ&oe=65985751">
       <div class="info">
             <div class="welcome">Welcome</div>
                 <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
@@ -155,6 +161,19 @@ if ($conn->connect_error) {
     </div>
   </div>
 </nav>
+<nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+  
+          <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+            <a class="navbar-brand col-lg-3 me-0" >Events</a>
+            <ul class="navbar-nav col-lg-9 justify-content-lg-center">
+
+          </div>
+        </div>
+      </nav>
 <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
   <symbol id="bootstrap" viewBox="0 0 118 94">
     <title>Bootstrap</title>
@@ -218,7 +237,7 @@ if ($conn->connect_error) {
                     <div class="card-body">
                       <p class="card-description"><strong>'. $row["description"] .'</strong></p>
                       <div class="d-flex justify-content-between align-items-center">
-                        <p class="card-text"><strong>'. $row["price"] .'</strong></p>
+                        <p class="card-text"><strong>Price: '. $row["price"] .' LE</strong></p>
                         <a href="'. $row["location_url"] .'">
                           <p class="card-text"><strong>Location: '. $row["location"] .'</strong></p>
                         </a>

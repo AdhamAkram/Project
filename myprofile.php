@@ -72,11 +72,11 @@ if ($result->num_rows > 0) {
     <div
       class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
     >
-      <a
+      <a 
         href="/"
         class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"
       >
-      <img src="2.svg" width="55" height="55" style="margin-top:15px" alt="Your SVG Image">
+      <img class="header-icon" src="2.svg" width="55" height="55" style="margin-top:15px" alt="Your SVG Image">
 
       </a>
 
@@ -113,7 +113,12 @@ if ($result->num_rows > 0) {
   </div>
 </div>
 
- 
+  <style>
+        .header-icon{
+          width: 50px;
+          height: 50px;
+        }
+      </style>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
     <div class="container-fluid">
@@ -122,7 +127,7 @@ if ($result->num_rows > 0) {
       </button>
   
       <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-        <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
+      <img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px; margin-left: 80px;" src="https://scontent.fcai19-3.fna.fbcdn.net/v/t39.30808-6/369675714_6483189295096607_3828070841385855754_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=3V2Eknou080AX8QxycK&_nc_ht=scontent.fcai19-3.fna&oh=00_AfC3yoxuu-uxaBC8MNHJcdB4OvNvCjchn53o_vtw25lIiQ&oe=65985751">
         <div class="info">
                 <div class="welcome">Welcome</div>
                 <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
@@ -207,7 +212,7 @@ if ($result->num_rows > 0) {
       <p1 class="lead">Reserva ID: <?php echo '' .$_SESSION['user_id'].'';  ?></p1>
     </div>
     <div class="background">
-    <img src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
+    <img src="https://scontent.fcai19-3.fna.fbcdn.net/v/t39.30808-6/369675714_6483189295096607_3828070841385855754_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=3V2Eknou080AX8QxycK&_nc_ht=scontent.fcai19-3.fna&oh=00_AfC3yoxuu-uxaBC8MNHJcdB4OvNvCjchn53o_vtw25lIiQ&oe=65985751">
     </div>
     <br>
   </div>
