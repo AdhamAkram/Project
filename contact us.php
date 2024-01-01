@@ -1,3 +1,43 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+ if (isset($_SESSION['user_id'])) {
+//   // Access user details
+  $userId = $_SESSION['user_id'];
+   $username = $_SESSION['username'];
+//   // Access other relevant details
+ } else {
+//   // Redirect to the login page if not logged in
+   echo '<script>window.location.href = "signin-form.php";</script>';
+   exit();
+ }
+$servername = "localhost:3307";
+$username = "root";
+$password = "";
+$dbname = "project";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+$ticketSql = "SELECT category_name, price FROM ticket_pricing";
+$ticketResult = $conn->query($ticketSql);
+
+if (!$ticketResult) {
+    die("Error retrieving ticket categories: " . $conn->error);
+}
+
+// Store ticket categories and prices in an array
+$ticketCategories = array();
+while ($ticketRow = $ticketResult->fetch_assoc()) {
+    $ticketCategories[] = $ticketRow;
+}
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,58 +124,58 @@
     </div>
   </div>
   <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
-    <div class="container-fluid">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-        <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
-        <div class="info">
-            <div class="welcome">Welcome</div>
-            <div class="name">أدهم نابلسي</div>
-            <div class="fan-id">
-                <span class="text-grey-light">Tazkarti ID</span>
-                <span class="id-num">102011900989962</span>
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+      <img class="rounded-circle" src="https://drive.google.com/file/d/1JyQu9_xWdoZ00GuQFNOUog-YVuFwQTsP/view">
+      <div class="info">
+                <div class="welcome">Welcome</div>
+                <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
+                <div class="fan-id">
+                    <span class="text-grey-light">ID:</span>
+                    <span class="id-num"><?php echo '' .$_SESSION['user_id'].'';  ?></span>
+                </div>
+                <div class="fan-id vaccin-info"><!----></div>
             </div>
-            <div class="fan-id vaccin-info"></div>
-        </div>
-        <ul class="navbar-nav col-lg-6 justify-content-lg-center">
-            <ul
-            class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
-          >
-            <li class="nav-icon">
-              <a href="#" class="nav-link text-black">
+      <ul class="navbar-nav col-lg-6 justify-content-lg-center">
+          <ul
+          class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
+        >
+          <li class="nav-icon">
+            <a href="matches-page.php" class="nav-link text-black">
+              <svg class="bi d-block mx-auto mb-1" width="30" height="30">
+                  <use xlink:href="#football" />
+                </svg>                    Matches
+            </a>
+          </li>
+          <li class="nav-icon">
+              <a href="events.php" class="nav-link text-black">
                 <svg class="bi d-block mx-auto mb-1" width="30" height="30">
-                    <use xlink:href="#football" />
-                  </svg>                    Matches
+                  <use xlink:href="#event" />
+                </svg>
+                Events
               </a>
             </li>
             <li class="nav-icon">
-                <a href="#" class="nav-link text-black">
+                <a href="mytickets.php" class="nav-link text-black">
                   <svg class="bi d-block mx-auto mb-1" width="30" height="30">
-                    <use xlink:href="#event" />
-                  </svg>
-                  Events
+                      <use xlink:href="#ticket" />
+                    </svg>
+                                          My Tickets
                 </a>
               </li>
-              <li class="nav-icon">
-                  <a href="#" class="nav-link text-black">
-                    <svg class="bi d-block mx-auto mb-1" width="30" height="30">
-                        <use xlink:href="#ticket" />
-                      </svg>
-                                            My Tickets
-                  </a>
-                </li>
-           
-          </ul>
-          
-          
-          </li>
+         
         </ul>
-       
-      </div>
+        
+        
+        </li>
+      </ul>
+     
     </div>
+  </div>
   </nav>
 <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
     <symbol id="bootstrap" viewBox="0 0 118 94">

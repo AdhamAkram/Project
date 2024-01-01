@@ -77,7 +77,7 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
     >
       <a
         href="/"
-        class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"
+        class="d-flex align-items-center my-2 my-sm-0 me-sm-auto text-white text-decoration-none"
       >
       <img src="2.svg" width="55" height="55" style="margin-top:5px" alt="Your SVG Image">
       </a>
