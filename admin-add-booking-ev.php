@@ -27,7 +27,7 @@ if (isset($_SESSION['table_name'])) {
     $table_name= $_SESSION['table_name'] ;
   } else {
      // Redirect to the login page if not logged in
-     echo '<script>window.location.href = "admin-events.php";</script>';
+     echo '<script>window.location.href = "admin-add-booking.php";</script>';
      exit();
   };
 
@@ -39,7 +39,7 @@ if (isset($_SESSION['table_name'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin-events</title>
+    <title>admin-booking</title>
     <link
       rel="canonical"
       href="https://getbootstrap.com/docs/5.3/examples/headers/"
@@ -91,6 +91,7 @@ if (isset($_SESSION['table_name'])) {
                 Home
               </a>
             </li>
+
               <li>
                   <a href="logout.php" class="nav-link text-white">
                     <svg class="bi d-block mx-auto mb-1" width="24" height="24">
@@ -123,7 +124,8 @@ if (isset($_SESSION['table_name'])) {
             </div>
             <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                 <ul
-                class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+                class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
+              >
                 <li class="nav-icon">
                   <a href="admin-match.php" class="nav-link text-black">
                     <svg class="bi d-block mx-auto mb-1" width="30" height="30">
@@ -226,7 +228,7 @@ if (isset($_SESSION['table_name'])) {
          
     </svg>
     <div class="container">
-    <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Add events </h5>
+    <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Add ticket </h5>
    
 <div class="container">
 
@@ -243,7 +245,7 @@ while ($rowColumn = $resultColumns->fetch_assoc()) {
     // Generate unique IDs for each input field
     $inputId = 'input_' . $columnName;
 
-    if ($columnName != 'event_id') {
+    if ($columnName != 'booking_id') {
         // Echo the column name in a span
         echo '<span style="font-weight : bold;">' . $columnName . '</span>';
 
@@ -272,28 +274,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //     // Assuming you have a form with buttons named "edit" and "delete"
     
 if (isset($_POST['save'])) {
-  $eventIdToEdit= $_POST['event_id'];
-  $name= $_POST['artist_name_id'];
-  $description= $_POST['description_id'];
-  $price= $_POST['price_id'];
-  $event_url= $_POST['event_url_id'];
-  $location_url= $_POST['location_url_id'];
-  $location= $_POST['location_id'];
+  $ticketIdToEdit= $_POST['booking_id'];
+  $user = ($_POST['user_id_id']);
+  $event = ($_POST['event_id_id']);
   
 // Update the user data in the database
-$sqlInsert = "INSERT INTO events ( artist_name,description, price , event_url , location_url , location )
-VALUES ('$name', '$description' , ' $price' , '$event_url' , '$location_url' , '$location' );";
+$sqlInsert = "INSERT INTO events_booking (user_id, event_id)
+VALUES ('$user', '$event');";
 
 
   $resultUpdate = $conn->query($sqlInsert);
 
   if ($resultUpdate) {
       // Update successful
-      echo '<script>alert("events ADDED successfully!");</script>';
-      echo '<script>window.location.href = "admin-events.php";</script>';
+      echo '<script>alert("event ADDED successfully!");</script>';
+      echo '<script>window.location.href = "admin-booking-events.php";</script>';
   } else {
       // Update failed
-      echo "Error updating events: " . $conn->error;
+      echo "Error updating match: " . $conn->error;
   }
 } 
         

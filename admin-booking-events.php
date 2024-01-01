@@ -11,8 +11,7 @@ session_start();
 //   // Redirect to the login page if not logged in
    echo '<script>window.location.href = "signin-form.php";</script>';
    exit();
- }
-$servername = "localhost:3307";
+ }$servername = "localhost:3307";
 $username = "root";
 $password = "";
 $dbname = "project";
@@ -22,16 +21,32 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-if (isset($_SESSION['table_name'])) {
-    
-    $table_name= $_SESSION['table_name'] ;
-  } else {
-     // Redirect to the login page if not logged in
-     echo '<script>window.location.href = "admin-events.php";</script>';
-     exit();
-  };
+$table_name="events_booking";
+$_SESSION['table_name'] = $table_name;
+// Check if the form has been submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Retrieve the selected option from the form
+  $selectedOption = isset($_POST['myDropdown']) ? $_POST['myDropdown'] : "";
 
+  // Store the selected option in the session
+  $_SESSION['selectedOption'] = $selectedOption;
+}
 
+// Retrieve match data from the database
+$sql = "SELECT events_booking.booking_id, events_booking.user_id, users.username
+FROM events_booking
+INNER JOIN users ON events_booking.user_id = users.user_id;";
+
+$result = $conn->query($sql);
+
+// Check if the selected option is stored in the session
+if (isset($_SESSION['selectedOption'])) {
+  // Access the selected option from the session
+  $selectedOption = $_SESSION['selectedOption'];
+} else {
+  // Default value if no option is selected
+  $selectedOption = "None";
+}
 
 ?>
 <!DOCTYPE html>
@@ -39,7 +54,7 @@ if (isset($_SESSION['table_name'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin-events</title>
+    <title>admin-bookings</title>
     <link
       rel="canonical"
       href="https://getbootstrap.com/docs/5.3/examples/headers/"
@@ -91,6 +106,7 @@ if (isset($_SESSION['table_name'])) {
                 Home
               </a>
             </li>
+            
               <li>
                   <a href="logout.php" class="nav-link text-white">
                     <svg class="bi d-block mx-auto mb-1" width="24" height="24">
@@ -113,18 +129,19 @@ if (isset($_SESSION['table_name'])) {
           <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
             <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
             <div class="info">
-                <div class="welcome">Welcome</div>
-                <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
-                <div class="fan-id">
-                    <span class="text-grey-light">ID:</span>
-                    <span class="id-num"><?php echo '' .$_SESSION['admin_id'].'';  ?></span>
-                </div>
-                <div class="fan-id vaccin-info"><!----></div>
-            </div>
+              <div class="welcome">Welcome</div>
+              <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
+              <div class="fan-id">
+                  <span class="text-grey-light">ID:</span>
+                  <span class="id-num"><?php echo '' .$_SESSION['admin_id'].'';  ?></span>
+              </div>
+              <div class="fan-id vaccin-info"><!----></div>
+          </div>
             <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                 <ul
-                class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-                <li class="nav-icon">
+                class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
+              >
+              <li class="nav-icon">
                   <a href="admin-match.php" class="nav-link text-black">
                     <svg class="bi d-block mx-auto mb-1" width="30" height="30">
                         <use xlink:href="#football" />
@@ -225,78 +242,157 @@ if (isset($_SESSION['table_name'])) {
     </svg>
          
     </svg>
-    <div class="container">
-    <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Add events </h5>
-   
-<div class="container">
-
-<?php
-$sqlColumns = "SHOW COLUMNS FROM $table_name";
-$resultColumns = $conn->query($sqlColumns);
-
-echo '<form method="post" action="">';
-
-// Display column names and corresponding empty input fields
-while ($rowColumn = $resultColumns->fetch_assoc()) {
-    $columnName = $rowColumn['Field'];
-
-    // Generate unique IDs for each input field
-    $inputId = 'input_' . $columnName;
-
-    if ($columnName != 'event_id') {
-        // Echo the column name in a span
-        echo '<span style="font-weight : bold;">' . $columnName . '</span>';
-
-        // Echo the input field with a unique ID
-        echo '<input class="form-control" id="' . $inputId . '" type="text" placeholder="' . $columnName . '" name="' . $columnName . '_id">';
-    }
-}
-
-
-
-// Add buttons
-echo '<div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="d-flex justify-content-end">
-            <button class="button button-black width-auto book-ticket-btn" style="margin : 1px;"  type="submit" name="save">Confirm Add </button>
+          </button>
+  
+          <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+            <a class="navbar-brand col-lg-3 me-0" ></a>
+            <ul class="navbar-nav col-lg-9 justify-content-lg-center">
+    <li class="nav-item">
+    <button id="button1" class="btn btn-dark" onclick="redirectToPage('admin-booking.php', this)" >Matches</button>
+<button id="button2" class="btn btn-dark" onclick="redirectToPage('admin-booking-events.php', this)"disabled>Events</button>
+
+<script>
+  function redirectToPage(page) {
+    // Redirect to the specified page
+    window.location.href = page;
+  }
+</script>
+
+    </li>
+
+          </div>
         </div>
-    </div>';
+      </nav>
+    <div class="container">
+    <?php
+// Check if the form is submitted
 
-echo '</form>';
 ?>
+<div class="container">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+<div>
+  <div class="d-flex justify-content-end">
+<button class="button button-black width-auto  book-ticket-btn" style="margin : 1px; margin-top: 1%;"  id="addNewmatchButton" type="submit"  name="add">Add new ticket</button></div>
+        <h5 style="font-weight : bold; margin: 1%;" for="myDropdown">Select ticket </h5>
+        <div>
+        <select id="myDropdown" name="myDropdown" class="form-control" onchange="this.form.submit()">
+        <option value="">Select a ticket</option>
+        <?php
+            // Populate the dropdown with match data
+            while ($row = $result->fetch_assoc()) {
+                $booking_id = $row['booking_id'];
+                $userId = $row['user_id'];
+                $username = $row['username'];
+                echo "<option value='$booking_id' " . ($selectedOption == "$booking_id" ? 'selected' : '') . ">$booking_id [ $userId - $username ]</option>";
+            }
+            ?>
+        </select>
+    </form>
 
+  <?php
+   
+  $sqlColumns = "SHOW COLUMNS FROM $table_name";
+  $resultColumns = $conn->query($sqlColumns);
+  
+  // Fetch data for match with id = 1
+  $sqlData = "SELECT * FROM $table_name WHERE booking_id LIKE '%$selectedOption%'";
+  $resultData = $conn->query($sqlData);
+  
+  if ($resultData->num_rows > 0) {
+      $rowData = $resultData->fetch_assoc();
+  if ($selectedOption!="") {
+      // Display column names and corresponding data in spans
+      while ($rowColumn = $resultColumns->fetch_assoc()) {
+          $columnName = $rowColumn['Field'];
+          $columnData = $rowData[$columnName];
+  
+          // Generate unique IDs for each input field
+          $inputId = 'input_' . $columnName;
+    if ($columnName!= 'booking_id') {
+    // Echo the column name in a span
+    echo '<span style="font-weight : bold;">' . $columnName . '</span>';
+
+    // Echo the input field with a unique ID and disabled text
+    echo '<form method="post" action=""> 
+    <input class="form-control" id="' . $inputId . '" type="text" placeholder="' . $columnData . '" value="' . $columnData . '"  name="' . $columnName . '_id" readonly>';
+      
+    }
+      }
+      echo '
+      <form method="post" action="">
+      <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="d-flex justify-content-end">
+      <input type="hidden" name="booking_id" value='.$selectedOption.'>
+      
+      <button class="button button-black width-auto  book-ticket-btn" style="margin : 1px;"  type="submit" name="delete">Delete</button>
+        <button class="button button-black width-auto book-ticket-btn editAllButton" style="margin : 1px;"  type="button" name="edit">Edit</button>
+        <button class="button button-black width-auto book-ticket-btn" style="margin : 1px;"  type="submit" name="save" >Confirm Edit </button>
+      </div>
+      </div>
+      </form>
+';
+  } 
+}
+  
+  ?>
   <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //     // Assuming you have a form with buttons named "edit" and "delete"
     
 if (isset($_POST['save'])) {
-  $eventIdToEdit= $_POST['event_id'];
-  $name= $_POST['artist_name_id'];
-  $description= $_POST['description_id'];
-  $price= $_POST['price_id'];
-  $event_url= $_POST['event_url_id'];
-  $location_url= $_POST['location_url_id'];
-  $location= $_POST['location_id'];
+  $ticketIdToEdit= $_POST['booking_id'];
+  $user = ($_POST['user_id_id']);
+  $event = ($_POST['event_id_id']);
   
-// Update the user data in the database
-$sqlInsert = "INSERT INTO events ( artist_name,description, price , event_url , location_url , location )
-VALUES ('$name', '$description' , ' $price' , '$event_url' , '$location_url' , '$location' );";
-
-
-  $resultUpdate = $conn->query($sqlInsert);
+  
+// Update the match data in the database
+$sqlUpdate = "UPDATE events_booking
+SET
+  user_id = '$user',
+  event_id = '$event'
+ 
+  
+WHERE
+  booking_id = '$ticketIdToEdit';";
+  $resultUpdate = $conn->query($sqlUpdate);
 
   if ($resultUpdate) {
       // Update successful
-      echo '<script>alert("events ADDED successfully!");</script>';
-      echo '<script>window.location.href = "admin-events.php";</script>';
+      echo '<script>alert("ticket UPDATED successfully!");</script>';
+      echo '<script>window.location.href = "admin-booking-events.php";</script>';
   } else {
       // Update failed
-      echo "Error updating events: " . $conn->error;
+      echo "Error updating ticket: " . $conn->error;
   }
 } 
         
+    elseif (isset($_POST['delete']) ) {
+        // Handle the delete action
+        $ticketIdToDelete= $_POST['booking_id'];
+
+          $sqlDelete = "DELETE FROM $table_name WHERE booking_id = '$ticketIdToDelete'";
+          $resultDelete = $conn->query($sqlDelete);
+        
+          if ($resultDelete) {
+              // Deletion successful
+              echo '<script>alert("ticket DELETED successfully!");</script>';
+              echo '<script>window.location.href = "admin-booking-events.php";</script>';
+              // Redirect or perform other actions...
+          } else {
+              // Deletion failed
+            echo "Error deleting ticket: " . $conn->error;
+          }
+     }
+     if (isset($_POST['add'])) {
+      echo '<script>window.location.href = "admin-add-booking-ev.php";</script>';
+  } 
     }
  
 $conn->close();
@@ -307,6 +403,15 @@ $conn->close();
 
       
 </body>
+<script>
+// JavaScript to enable all input fields on button click
+document.querySelector('.editAllButton').addEventListener('click', function() {
+    // Select all input fields with class "form-control" and remove the "disabled" attribute
+    document.querySelectorAll('.form-control').forEach(function(inputField) {
+        inputField.removeAttribute('readonly');
+    });
+});
+</script>
 
 
 </html>

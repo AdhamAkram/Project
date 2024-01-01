@@ -134,7 +134,7 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
     </button>
 
     <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-      <img class="rounded-circle" src="https://media.istockphoto.com/id/1288538088/photo/portrait-young-confident-smart-asian-businessman-look-at-camera-and-smile.jpg?s=2048x2048&w=is&k=20&c=J-PEzTmJkg-2ngh-oKmIucEuzMX4l7C7lH2JG6U5NZw=">
+      <img class="rounded-circle" src="https://drive.google.com/file/d/1JyQu9_xWdoZ00GuQFNOUog-YVuFwQTsP/view">
       <div class="info">
                 <div class="welcome">Welcome</div>
                 <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
