@@ -79,15 +79,7 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
         href="/"
         class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"
       >
-        <svg
-          class="bi me-2"
-          width="40"
-          height="32"
-          role="img"
-          aria-label="Bootstrap"
-        >
-          <use xlink:href="#bootstrap" />
-        </svg>
+      <img src="2.svg" width="55" height="55" style="margin-top:5px" alt="Your SVG Image">
       </a>
 
       <ul
@@ -492,12 +484,12 @@ Book Ticket
       <div class="container">
         <footer class="py-3 my-4">
           <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-primary text-white">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-primary text-white">Contact Us</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-primary text-white">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-primary text-white">About</a></li>
+            <li class="nav-item"><a href="Homepage.php" class="nav-link px-2 text-body-primary text-white">Home</a></li>
+            <li class="nav-item"><a href="contact us.html" class="nav-link px-2 text-body-primary text-white">Contact Us</a></li>
+            <li class="nav-item"><a href="FAQ.html" class="nav-link px-2 text-body-primary text-white">FAQs</a></li>
+            <li class="nav-item"><a href="about.html" class="nav-link px-2 text-body-primary text-white">About</a></li>
           </ul>
-          <p class="text-center text-body-primary">© 2023 Company, Inc</p>
+          <p class="text-center text-body-primary">© 2024 Reserva</p>
         </footer>
       </div>
     </div>
