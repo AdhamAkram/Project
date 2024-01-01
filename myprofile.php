@@ -38,6 +38,16 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 ?>
+<?php
+// Fetch the user's profile_pic_url from the database
+$userId = $_SESSION['user_id']; // Assuming you have a user session
+$selectQuery = "SELECT profile_pic_url FROM users WHERE user_id = $userId";
+$result = mysqli_query($conn, $selectQuery);
+$row = mysqli_fetch_assoc($result);
+
+// Check if the user has a custom profile picture, otherwise use the default
+$profilePicUrl = !empty($row['profile_pic_url']) ? $row['profile_pic_url'] : 'default_profile_pic_url.jpg';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -127,7 +137,7 @@ if ($result->num_rows > 0) {
       </button>
   
       <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-      <img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px; margin-left: 80px;" src="https://scontent.fcai19-3.fna.fbcdn.net/v/t39.30808-6/369675714_6483189295096607_3828070841385855754_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=3V2Eknou080AX8QxycK&_nc_ht=scontent.fcai19-3.fna&oh=00_AfC3yoxuu-uxaBC8MNHJcdB4OvNvCjchn53o_vtw25lIiQ&oe=65985751">
+      <img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px; margin-left: 80px;" src="<?php echo ''.$profilePicUrl.'';  ?>">
         <div class="info">
                 <div class="welcome">Welcome</div>
                 <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
@@ -212,7 +222,9 @@ if ($result->num_rows > 0) {
       <p1 class="lead">Reserva ID: <?php echo '' .$_SESSION['user_id'].'';  ?></p1>
     </div>
     <div class="background">
-    <img src="https://scontent.fcai19-3.fna.fbcdn.net/v/t39.30808-6/369675714_6483189295096607_3828070841385855754_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=3V2Eknou080AX8QxycK&_nc_ht=scontent.fcai19-3.fna&oh=00_AfC3yoxuu-uxaBC8MNHJcdB4OvNvCjchn53o_vtw25lIiQ&oe=65985751">
+    <div class="background">
+    <img src="<?php echo $profilePicUrl; ?>">
+</div>
     </div>
     <br>
   </div>
@@ -266,6 +278,15 @@ if ($result->num_rows > 0) {
             </div>
         </div>
     </form>
+    <hr>
+    <h6 class="personal"><b>Profile Picture</b></h6>
+    <form action="myprofile.php" method="post" enctype="multipart/form-data">
+    <div class="input-group">
+  <input type="file" class="form-control" name="profile_pic" accept="image/*" required id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+  <button class="btn btn-dark" type="submit" name="upload" id="inputGroupFileAddon04">Upload</button>
+</div>
+  
+</form>
 </div>
 
   
@@ -298,16 +319,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       echo "Error updating user: " . $conn->error;
   }
         } else {
-            echo '';
+           
         }
     } else {
-        echo 'One or more form fields are not set.';
+       
     }
 }
 ?>
 
 
 </div>
+
+<?php
+// Check if the form was submitted
+if (isset($_POST['upload'])) {
+  // Database connection code (similar to what you already have)
+
+  // File upload handling
+  $targetDirectory = "/Project/Project/pics/"; // Specify the relative path where you want to store uploaded files
+  $targetFile = $targetDirectory . basename($_FILES['profile_pic']['name']);
+
+  // Check if the directory exists, if not, create it
+  if (!is_dir($targetDirectory)) {
+    mkdir($targetDirectory, 0777, true);
+  }
+
+  if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $targetFile)) {
+    // Update the user's profile_pic_url in the database
+    $userId = $_SESSION['user_id']; // Assuming you have a user session
+    $profilePicUrl = $targetFile; // Change this if your URL is different
+
+    $updateQuery = "UPDATE users SET profile_pic_url = '$profilePicUrl' WHERE user_id = $userId";
+    mysqli_query($conn, $updateQuery);
+
+   
+  } else {
+    echo "Error uploading file. " . $_FILES['profile_pic']['error'];
+  }
+}
+?>
+
+
+
 
 <div class="px-3 py-2 text-bg-dark border-bottom">
       <div class="container">

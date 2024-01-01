@@ -114,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       // // Store user details in the session
        $_SESSION['user_id'] = $userDetails['user_id'];
        $_SESSION['username'] = $userDetails['username'];
+       $_SESSION['pic'] = $userDetails['profile_pic_url'];
        
       echo '<script>window.location.href = "homepage.php";</script>';
       exit();

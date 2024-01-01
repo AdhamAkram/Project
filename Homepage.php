@@ -34,7 +34,13 @@ $ticketCategories = array();
 while ($ticketRow = $ticketResult->fetch_assoc()) {
     $ticketCategories[] = $ticketRow;
 }
+$userId = $_SESSION['user_id']; // Assuming you have a user session
+$selectQuery = "SELECT profile_pic_url FROM users WHERE user_id = $userId";
+$result = mysqli_query($conn, $selectQuery);
+$row = mysqli_fetch_assoc($result);
 
+// Check if the user has a custom profile picture, otherwise use the default
+$profilePicUrl = !empty($row['profile_pic_url']) ? $row['profile_pic_url'] : 'default_profile_pic_url.jpg';
 
 
 ?>
@@ -126,7 +132,7 @@ while ($ticketRow = $ticketResult->fetch_assoc()) {
     </button>
 
     <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-    <img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px; margin-left: 80px;" src="https://scontent.fcai19-3.fna.fbcdn.net/v/t39.30808-6/369675714_6483189295096607_3828070841385855754_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=3V2Eknou080AX8QxycK&_nc_ht=scontent.fcai19-3.fna&oh=00_AfC3yoxuu-uxaBC8MNHJcdB4OvNvCjchn53o_vtw25lIiQ&oe=65985751">
+    <img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; margin-right: 20px; margin-left: 80px;" src="<?php echo ''.$profilePicUrl.'';  ?>">
       <div class="info">
                 <div class="welcome">Welcome</div>
                 <div class="name"><?php echo '' .$_SESSION['username'].'';  ?></div>
