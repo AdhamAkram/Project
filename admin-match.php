@@ -355,7 +355,7 @@ $sqlUpdate = "UPDATE $table_name
         // Handle the delete action
          $matchIdToDelete = $_POST['match_id'];  // Assuming you have an input with the name "match_id"
         
-         $matchnameId = ($_POST['matchname_id']);
+        
 
           $sqlDelete = "DELETE FROM $table_name WHERE match_id = '$matchIdToDelete'";
           $resultDelete = $conn->query($sqlDelete);

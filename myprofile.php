@@ -125,8 +125,8 @@ $profilePicUrl = !empty($row['profile_pic_url']) ? $row['profile_pic_url'] : 'de
 
   <style>
         .header-icon{
-          width: 50px;
-          height: 50px;
+          width: 55px;
+          height: 55px;
         }
       </style>
 
@@ -336,7 +336,7 @@ if (isset($_POST['upload'])) {
   // Database connection code (similar to what you already have)
 
   // File upload handling
-  $targetDirectory = "/Project/Project/pics/"; // Specify the relative path where you want to store uploaded files
+  $targetDirectory = "Programs/Xampp/htdocs/Project/Project/pics/"; // Specify the relative path where you want to store uploaded files
   $targetFile = $targetDirectory . basename($_FILES['profile_pic']['name']);
 
   // Check if the directory exists, if not, create it
@@ -351,7 +351,7 @@ if (isset($_POST['upload'])) {
 
     $updateQuery = "UPDATE users SET profile_pic_url = '$profilePicUrl' WHERE user_id = $userId";
     mysqli_query($conn, $updateQuery);
-
+echo'<script> window.location.href = "myprofile.php";</script>';
    
   } else {
     echo "Error uploading file. " . $_FILES['profile_pic']['error'];
@@ -393,9 +393,7 @@ if (isset($_POST['upload'])) {
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
-<!-- Bootstrap validation script -->
 
-<!-- Bootstrap validation script -->
 <script>
     (function () {
         'use strict';

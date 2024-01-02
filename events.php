@@ -113,8 +113,8 @@ $profilePicUrl = !empty($row['profile_pic_url']) ? $row['profile_pic_url'] : 'de
 </div>
 <style>
         img{
-          width: 50px;
-          height: 50px;
+          width: 55px;
+          height: 55px;
         }
       </style>
 <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
@@ -230,7 +230,13 @@ $profilePicUrl = !empty($row['profile_pic_url']) ? $row['profile_pic_url'] : 'de
     <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <?php
-        $sql = "SELECT * FROM events";
+        $sql = "SELECT * FROM events
+         WHERE NOT EXISTS (
+      SELECT 1
+      FROM events_booking b
+      WHERE b.user_id = '$userId'
+      AND b.event_id = events.event_id
+  )";
 
         // Execute the query
         $result = $conn->query($sql);

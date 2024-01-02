@@ -76,8 +76,8 @@ if ($conn->connect_error) {
     </div>
       <style>
         img{
-          width: 50px;
-          height: 50px;
+          width: 55px;
+          height: 55px;
         }
       </style>
       

@@ -638,7 +638,7 @@ if ($result->num_rows > 0) {
                    ';
 
                       foreach ($ticketCategories as $category) {
-                          echo '<option value="' . $category['category_name'] . '|' . $category['price'] .'|' . $adham . '">' . $category['category_name'] . ' - ' . $category['price'] . 'EGP</option>';
+                          echo '<option value="' . $category['category_name'] . '|' . $category['price'] .'|">' . $category['category_name'] . ' - ' . $category['price'] . 'EGP</option>';
                       }
                       $selectedOption = $_POST['cat-select'];
                   
@@ -734,11 +734,6 @@ function bookTicket(button) {
 var price = values[1];
 var categoryName = values[0];
 
-// Log the selected values to the console
-console.log('Selected Category Name:', categoryName);
-console.log('Selected Price:', price);
-
-console.log(matchId);
 proceedToCheckout();
        
 
