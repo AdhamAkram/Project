@@ -154,6 +154,30 @@ if ($password === $confirmPassword) {
       </div>
     </div>
 
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const passwordInput = document.querySelector('input[name="password"]');
+    const confirmPasswordInput = document.querySelector('input[name="confirm"]');
+    const form = document.querySelector('form');
 
+    form.addEventListener('submit', function (event) {
+        if (!isPasswordValid(passwordInput.value)) {
+            alert('Password must be at least 8 characters long and contain at least 1 uppercase letter, 1 lowercase letter, and 1 number.');
+            event.preventDefault(); // Prevent form submission
+        }
+
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            alert('Passwords do not match.');
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+    function isPasswordValid(password) {
+        // Password must be at least 8 characters long and contain at least 1 uppercase letter, 1 lowercase letter, and 1 number
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        return passwordRegex.test(password);
+    }
+});
+</script>
 </body>
 </html>

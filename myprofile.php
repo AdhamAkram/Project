@@ -243,7 +243,7 @@ $profilePicUrl = !empty($row['profile_pic_url']) ? $row['profile_pic_url'] : 'de
 
             <div class="col-md-4">
                 <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" name="email" value="<?php echo ' ' . $email. '';  ?>" id="email" required>
+                <input type="email" class="form-control" name="email" value="<?php echo ''. $email.'';  ?>" id="email" required>
                 <div class="invalid-feedback">
                     Please enter a valid email address.
                 </div>
@@ -251,7 +251,7 @@ $profilePicUrl = !empty($row['profile_pic_url']) ? $row['profile_pic_url'] : 'de
 
             <div class="col-md-4">
                 <label for="phone" class="form-label">Phone number</label>
-                <input type="tel" class="form-control" name="phone" value="<?php echo ' ' . $phone. '';  ?>" id="phone" pattern="\d{11}" required>
+                <input type="tel" class="form-control" name="phone" value="<?php echo trim($phone); ?>" id="phone" pattern="\d{11}" required>
                 <div class="invalid-feedback">
                     Please enter a valid phone number with 11 digits.
                 </div>
@@ -447,8 +447,56 @@ echo'<script> window.location.href = "myprofile.php";</script>';
             input.previousElementSibling.classList.remove('is-invalid');
         }
     })();
+  
 </script>
+<script>
+    // Add an event listener to the form for the 'submit' event
+    document.querySelector('.needs-validation').addEventListener('submit', function (event) {
+        // Get the values of the password and confirm password fields
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
 
+        // Check if the password meets the specified criteria
+        if (!isPasswordValid(password)) {
+            // If not valid, prevent the form submission and display an error message
+            alert("Password is invalid. Please make sure it is 8 characters or longer with at least 1 uppercase letter, 1 lowercase letter, and 1 digit.");
+            event.preventDefault();
+        }
+
+        // Check if the password and confirm password match
+        if (password !== confirmPassword) {
+            // If not match, prevent the form submission and display an error message
+            alert("Password and Confirm Password do not match.");
+            event.preventDefault();
+        }
+    });
+
+    // Function to validate the password
+    function isPasswordValid(password) {
+        // Password should be 8 characters or longer
+        if (password.length < 8) {
+            return false;
+        }
+
+        // Password should have at least 1 uppercase letter
+        if (!/[A-Z]/.test(password)) {
+            return false;
+        }
+
+        // Password should have at least 1 lowercase letter
+        if (!/[a-z]/.test(password)) {
+            return false;
+        }
+
+        // Password should have at least 1 digit
+        if (!/\d/.test(password)) {
+            return false;
+        }
+
+        // If all conditions are met, the password is valid
+        return true;
+    }
+</script>
 
 
 
